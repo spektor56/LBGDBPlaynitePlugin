@@ -16,4 +16,16 @@
     <PackageReference Include="sqlite" Version="3.13.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="Playnite.SDK">
+      <HintPath>..\..\..\source\repos\spektor56\Playnite\source\PlayniteSDK\bin\Release\Playnite.SDK.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="extension.yaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

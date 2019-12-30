@@ -1,0 +1,6 @@
+﻿Name: LBGDB metadata provider
+Author: Spektor
+Version: 1.0
+Module: LBGDBMetadata.dll
+Type: MetadataProvider
+Icon: Resources\igdbicon.png

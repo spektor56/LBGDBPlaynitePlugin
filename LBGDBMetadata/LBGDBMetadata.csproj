@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp2.0;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;netcore</TargetFrameworks>
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
   </PropertyGroup>
 
@@ -17,6 +17,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Reference Include="Playnite.Common">
+      <HintPath>..\..\..\source\repos\spektor56\Playnite\source\Playnite.Common\bin\Release\Playnite.Common.dll</HintPath>
+    </Reference>
     <Reference Include="Playnite.SDK">
       <HintPath>..\..\..\source\repos\spektor56\Playnite\source\PlayniteSDK\bin\Release\Playnite.SDK.dll</HintPath>
     </Reference>
@@ -25,6 +28,9 @@
   <ItemGroup>
     <None Update="extension.yaml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="LbgdbMetadataSettingsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
     </None>
   </ItemGroup>
 

@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.29503.13
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LBGDBTest", "WindowsFormsApp8\LBGDBTest.csproj", "{27A937ED-1942-4FCF-AF78-DC0F1C648F80}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LBGDBMetadata", "LBGDBMetadata\LBGDBMetadata.csproj", "{B7D5A6AC-33B8-4F3F-95E9-060B05B5EBED}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LBGDBMetadata", "ClassLibrary1\LBGDBMetadata.csproj", "{0950409B-A33A-4052-975A-3C1F46AA2BB6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,10 @@ Global
 		{27A937ED-1942-4FCF-AF78-DC0F1C648F80}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{27A937ED-1942-4FCF-AF78-DC0F1C648F80}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{27A937ED-1942-4FCF-AF78-DC0F1C648F80}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B7D5A6AC-33B8-4F3F-95E9-060B05B5EBED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B7D5A6AC-33B8-4F3F-95E9-060B05B5EBED}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B7D5A6AC-33B8-4F3F-95E9-060B05B5EBED}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B7D5A6AC-33B8-4F3F-95E9-060B05B5EBED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0950409B-A33A-4052-975A-3C1F46AA2BB6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0950409B-A33A-4052-975A-3C1F46AA2BB6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0950409B-A33A-4052-975A-3C1F46AA2BB6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0950409B-A33A-4052-975A-3C1F46AA2BB6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

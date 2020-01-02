@@ -1,10 +1,12 @@
-﻿using System.Xml.Serialization;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Xml.Serialization;
 
 namespace LBGDBMetadata.Metadata
 {
     [XmlRoot(ElementName = "Emulator")]
     public class Emulator
     {
+        [Key]
         [XmlElement(ElementName = "Name")]
         public string Name { get; set; }
         [XmlElement(ElementName = "CommandLine")]

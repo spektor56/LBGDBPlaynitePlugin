@@ -1,4 +1,5 @@
-﻿using System.Xml.Serialization;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Xml.Serialization;
 
 namespace LBGDBMetadata.Metadata
 {
@@ -15,6 +16,7 @@ namespace LBGDBMetadata.Metadata
         public string MaxPlayers { get; set; }
         [XmlElement(ElementName = "Cooperative")]
         public string Cooperative { get; set; }
+        [Key]
         [XmlElement(ElementName = "DatabaseID")]
         public string DatabaseID { get; set; }
         [XmlElement(ElementName = "WikipediaURL")]

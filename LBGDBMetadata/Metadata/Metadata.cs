@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Xml.Serialization;
 
 namespace LBGDBMetadata.Metadata
@@ -6,6 +7,7 @@ namespace LBGDBMetadata.Metadata
     [XmlRoot(ElementName = "LaunchBox")]
     public class Metadata
     {
+        [Key]
         [XmlElement(ElementName = "Game")]
         public List<Game> Game { get; set; }
         [XmlElement(ElementName = "Platform")]

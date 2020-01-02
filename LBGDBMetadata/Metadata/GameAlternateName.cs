@@ -1,4 +1,5 @@
-﻿using System.Xml.Serialization;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Xml.Serialization;
 
 namespace LBGDBMetadata.Metadata
 {
@@ -7,6 +8,7 @@ namespace LBGDBMetadata.Metadata
     {
         [XmlElement(ElementName = "AlternateName")]
         public string AlternateName { get; set; }
+        [Key]
         [XmlElement(ElementName = "DatabaseID")]
         public string DatabaseID { get; set; }
         [XmlElement(ElementName = "Region")]

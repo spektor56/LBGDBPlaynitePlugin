@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.29503.13
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LBGDBTest", "WindowsFormsApp8\LBGDBTest.csproj", "{27A937ED-1942-4FCF-AF78-DC0F1C648F80}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LBGDBMetadata", "ClassLibrary1\LBGDBMetadata.csproj", "{0950409B-A33A-4052-975A-3C1F46AA2BB6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LBGDBMetadata", "LBGDBMetadata\LBGDBMetadata.csproj", "{0950409B-A33A-4052-975A-3C1F46AA2BB6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

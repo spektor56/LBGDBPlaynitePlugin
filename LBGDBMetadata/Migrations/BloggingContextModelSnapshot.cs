@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace LBGDBMetadata.Migrations
+namespace ClassLibrary1.Migrations
 {
     [DbContext(typeof(BloggingContext))]
     partial class BloggingContextModelSnapshot : ModelSnapshot
@@ -13,44 +13,58 @@ namespace LBGDBMetadata.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.2.6-servicing-10079");
+                .HasAnnotation("ProductVersion", "3.1.0");
 
-            modelBuilder.Entity("LBGDBMetadata.Blog", b =>
+            modelBuilder.Entity("LBGDBMetadata.Metadata.Game", b =>
                 {
-                    b.Property<int>("BlogId")
-                        .ValueGeneratedOnAdd();
+                    b.Property<string>("DatabaseID")
+                        .HasColumnType("TEXT");
 
-                    b.Property<string>("Url");
+                    b.Property<string>("CommunityRating")
+                        .HasColumnType("TEXT");
 
-                    b.HasKey("BlogId");
+                    b.Property<string>("CommunityRatingCount")
+                        .HasColumnType("TEXT");
 
-                    b.ToTable("Blogs");
-                });
+                    b.Property<string>("Cooperative")
+                        .HasColumnType("TEXT");
 
-            modelBuilder.Entity("LBGDBMetadata.Post", b =>
-                {
-                    b.Property<int>("PostId")
-                        .ValueGeneratedOnAdd();
+                    b.Property<string>("Developer")
+                        .HasColumnType("TEXT");
 
-                    b.Property<int>("BlogId");
+                    b.Property<string>("ESRB")
+                        .HasColumnType("TEXT");
 
-                    b.Property<string>("Content");
+                    b.Property<string>("Genres")
+                        .HasColumnType("TEXT");
 
-                    b.Property<string>("Title");
+                    b.Property<string>("MaxPlayers")
+                        .HasColumnType("TEXT");
 
-                    b.HasKey("PostId");
+                    b.Property<string>("Name")
+                        .HasColumnType("TEXT");
 
-                    b.HasIndex("BlogId");
+                    b.Property<string>("Overview")
+                        .HasColumnType("TEXT");
 
-                    b.ToTable("Posts");
-                });
+                    b.Property<string>("Platform")
+                        .HasColumnType("TEXT");
 
-            modelBuilder.Entity("LBGDBMetadata.Post", b =>
-                {
-                    b.HasOne("LBGDBMetadata.Blog", "Blog")
-                        .WithMany("Posts")
-                        .HasForeignKey("BlogId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                    b.Property<string>("Publisher")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ReleaseDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ReleaseYear")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("WikipediaURL")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("DatabaseID");
+
+                    b.ToTable("Games");
                 });
 #pragma warning restore 612, 618
         }

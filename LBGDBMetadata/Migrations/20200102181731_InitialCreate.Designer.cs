@@ -5,10 +5,10 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace ClassLibrary1.Migrations
+namespace LBGDBMetadata.Migrations
 {
-    [DbContext(typeof(BloggingContext))]
-    [Migration("20191230061937_InitialCreate")]
+    [DbContext(typeof(MetaDataContext))]
+    [Migration("20200102181731_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

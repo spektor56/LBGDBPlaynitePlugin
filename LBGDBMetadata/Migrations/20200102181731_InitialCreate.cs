@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace ClassLibrary1.Migrations
+namespace LBGDBMetadata.Migrations
 {
     public partial class InitialCreate : Migration
     {

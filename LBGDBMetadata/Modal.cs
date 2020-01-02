@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LBGDBMetadata
 {
-    public class BloggingContext : DbContext
+    public class MetaDataContext : DbContext
     {
         public DbSet<Metadata.Game> Games { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder options)

@@ -182,11 +182,11 @@
     <Compile Include="Metadata\Metadata.cs" />
     <Compile Include="Metadata\Platform.cs" />
     <Compile Include="Metadata\PlatformAlternateName.cs" />
-    <Compile Include="Migrations\20191230061937_InitialCreate.cs" />
-    <Compile Include="Migrations\20191230061937_InitialCreate.designer.cs">
-      <DependentUpon>20191230061937_InitialCreate.cs</DependentUpon>
+    <Compile Include="Migrations\20200102181731_InitialCreate.cs" />
+    <Compile Include="Migrations\20200102181731_InitialCreate.designer.cs">
+      <DependentUpon>20200102181731_InitialCreate.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\BloggingContextModelSnapshot.cs" />
+    <Compile Include="Migrations\MetaDataContextModelSnapshot.cs" />
     <Compile Include="Modal.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -207,6 +207,7 @@
     </None>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\SQLitePCLRaw.lib.e_sqlite3.2.0.2\build\net461\SQLitePCLRaw.lib.e_sqlite3.targets" Condition="Exists('..\packages\SQLitePCLRaw.lib.e_sqlite3.2.0.2\build\net461\SQLitePCLRaw.lib.e_sqlite3.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

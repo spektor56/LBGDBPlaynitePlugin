@@ -12,10 +12,6 @@ namespace LBGDBMetadata.Migrations
                 {
                     DatabaseID = table.Column<string>(nullable: false),
                     Name = table.Column<string>(nullable: true),
-                    ReleaseYear = table.Column<string>(nullable: true),
-                    Overview = table.Column<string>(nullable: true),
-                    MaxPlayers = table.Column<string>(nullable: true),
-                    Cooperative = table.Column<string>(nullable: true),
                     WikipediaURL = table.Column<string>(nullable: true),
                     Platform = table.Column<string>(nullable: true),
                     ESRB = table.Column<string>(nullable: true),

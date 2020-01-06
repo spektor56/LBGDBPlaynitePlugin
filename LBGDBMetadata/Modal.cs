@@ -11,6 +11,13 @@ namespace LBGDBMetadata
         protected override void OnConfiguring(DbContextOptionsBuilder options)
             => options.UseSqlite("Data Source=lbgdb.db");
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            /*
+            modelBuilder.Entity<Metadata.GameAlternateName>()
+                .HasKey(c => new { c.DatabaseID, c.Region });
+                */
+        }
         /*
 
         private Dictionary<string, string> _imageTypeDictionary = new Dictionary<string,string>();

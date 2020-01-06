@@ -63,18 +63,20 @@ namespace LBGDBMetadata
         public override string Name { get; } = "Launchbox";
         public override List<MetadataField> SupportedFields { get; } = new List<MetadataField>
         {
-            MetadataField.Description,
-            MetadataField.CoverImage,
-            MetadataField.BackgroundImage,
+            MetadataField.Name,
+            MetadataField.Genres,
             MetadataField.ReleaseDate,
             MetadataField.Developers,
             MetadataField.Publishers,
-            MetadataField.Genres,
+            //MetadataField.Tags,
+            MetadataField.Description,
             MetadataField.Links,
-            MetadataField.Tags,
             MetadataField.CriticScore,
             MetadataField.CommunityScore,
-            MetadataField.
+            //MetadataField.Icon,
+            MetadataField.CoverImage,
+            MetadataField.BackgroundImage
+            
         };
     }
 }

@@ -6,7 +6,6 @@ namespace LBGDBMetadata.Metadata
     [XmlRoot(ElementName = "GameImage")]
     public class GameImage
     {
-        [Key]
         [XmlElement(ElementName = "DatabaseID")]
         public string DatabaseID { get; set; }
         [XmlElement(ElementName = "FileName")]

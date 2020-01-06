@@ -8,14 +8,7 @@ namespace LBGDBMetadata.Metadata
     {
         [XmlElement(ElementName = "Name")]
         public string Name { get; set; }
-        [XmlElement(ElementName = "ReleaseYear")]
-        public string ReleaseYear { get; set; }
-        [XmlElement(ElementName = "Overview")]
-        public string Overview { get; set; }
-        [XmlElement(ElementName = "MaxPlayers")]
-        public string MaxPlayers { get; set; }
-        [XmlElement(ElementName = "Cooperative")]
-        public string Cooperative { get; set; }
+
         [Key]
         [XmlElement(ElementName = "DatabaseID")]
         public string DatabaseID { get; set; }

@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LBGDBMetadata.Migrations
 {
     [DbContext(typeof(MetaDataContext))]
-    [Migration("20200102181731_InitialCreate")]
+    [Migration("20200106190510_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -28,9 +28,6 @@ namespace LBGDBMetadata.Migrations
                     b.Property<string>("CommunityRatingCount")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Cooperative")
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("Developer")
                         .HasColumnType("TEXT");
 
@@ -40,13 +37,7 @@ namespace LBGDBMetadata.Migrations
                     b.Property<string>("Genres")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("MaxPlayers")
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("Name")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Overview")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Platform")
@@ -56,9 +47,6 @@ namespace LBGDBMetadata.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ReleaseDate")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ReleaseYear")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("WikipediaURL")

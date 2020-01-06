@@ -46,7 +46,7 @@ namespace LBGDBMetadata
             return fileHash;
         }
 
-        public void SomeOtherMethod()
+        private void SomeOtherMethod()
         {/*
             var zipFile = ZipFile.OpenRead(metaDataFullPath);
             var metaData = zipFile.Entries.FirstOrDefault(entry =>

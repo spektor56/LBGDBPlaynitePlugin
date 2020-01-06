@@ -73,7 +73,8 @@ namespace LBGDBMetadata
             MetadataField.Links,
             MetadataField.Tags,
             MetadataField.CriticScore,
-            MetadataField.CommunityScore
+            MetadataField.CommunityScore,
+            MetadataField.
         };
     }
 }

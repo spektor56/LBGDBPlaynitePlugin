@@ -169,13 +169,11 @@
     <Compile Include="IgdbMetadataSettingsView.xaml.cs">
       <DependentUpon>IgdbMetadataSettingsView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Launchbox\ImageType.cs" />
     <Compile Include="LbgdbLazyMetadataProvider.cs" />
     <Compile Include="LbgdbMetadataPlugin.cs" />
     <Compile Include="LbgdbMetadataSettings.cs" />
-    <Compile Include="Metadata\Emulator.cs" />
     <Compile Include="Metadata\EmulatorPlatform.cs" />
-    <Compile Include="Metadata\File.cs" />
-    <Compile Include="Metadata\Files.cs" />
     <Compile Include="Metadata\Game.cs" />
     <Compile Include="Metadata\GameAlternateName.cs" />
     <Compile Include="Metadata\GameImage.cs" />
@@ -207,7 +205,9 @@
     </None>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="translationTable.xml" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\SQLitePCLRaw.lib.e_sqlite3.2.0.2\build\net461\SQLitePCLRaw.lib.e_sqlite3.targets" Condition="Exists('..\packages\SQLitePCLRaw.lib.e_sqlite3.2.0.2\build\net461\SQLitePCLRaw.lib.e_sqlite3.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

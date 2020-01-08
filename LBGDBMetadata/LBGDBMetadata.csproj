@@ -168,11 +168,8 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Api\LbgdbApi.cs" />
-    <Compile Include="Api\Options.cs" />
-    <Compile Include="IgdbMetadataSettingsView.xaml.cs">
-      <DependentUpon>IgdbMetadataSettingsView.xaml</DependentUpon>
-    </Compile>
+    <Compile Include="LaunchBox\Api\LbgdbApi.cs" />
+    <Compile Include="LaunchBox\Api\Options.cs" />
     <Compile Include="LaunchBox\Image\ImageType.cs" />
     <Compile Include="LbgdbLazyMetadataProvider.cs" />
     <Compile Include="LbgdbMetadataPlugin.cs" />
@@ -194,10 +191,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="IgdbMetadataSettingsView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <None Include="LbgdbMetadataSettingsView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

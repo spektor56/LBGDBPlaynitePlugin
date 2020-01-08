@@ -1,15 +1,8 @@
-﻿using System;
-using System.IO;
-using System.IO.Compression;
-using System.Linq;
+﻿using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Xml;
-using System.Xml.Serialization;
-using LBGDBMetadata.Api;
-using Playnite.SDK;
 
-namespace LBGDBMetadata
+namespace LBGDBMetadata.LaunchBox.Api
 {
     public class LbgdbApi
     {

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace LBGDBMetadata.Api
+﻿namespace LBGDBMetadata.LaunchBox.Api
 {
     public class Options
     {

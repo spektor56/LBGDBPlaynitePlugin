@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Windows.Controls;
 using Playnite.SDK;
 using Playnite.SDK.Models;
 using Playnite.SDK.Plugins;
@@ -8,14 +9,21 @@ namespace LBGDBMetadata
 {
     public class LbgdbMetadataPlugin : MetadataPlugin
     {
+        internal readonly LbgdbMetadataSettings Settings;
+
         public LbgdbMetadataPlugin(IPlayniteAPI playniteAPI) : base(playniteAPI)
         {
-            
+            Settings = new LbgdbMetadataSettings(this);
         }
 
         public override ISettings GetSettings(bool firstRunSettings)
         {
-            return base.GetSettings(firstRunSettings);
+            return Settings;
+        }
+
+        public override UserControl GetSettingsView(bool firstRunView)
+        {
+            return new LbgdbMetadataSettingsView();
         }
 
 

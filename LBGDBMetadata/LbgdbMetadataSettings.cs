@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Playnite.SDK;
 
 namespace LBGDBMetadata
@@ -11,6 +8,32 @@ namespace LBGDBMetadata
     {
         private LbgdbMetadataSettings editingClone;
         private readonly LbgdbMetadataPlugin plugin;
+
+        private string oldHash = "";
+        public string OldHash
+        {
+            get => oldHash;
+            set
+            {
+                oldHash = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public LbgdbMetadataSettings()
+        {
+        }
+
+        public LbgdbMetadataSettings(LbgdbMetadataPlugin plugin)
+        {
+            this.plugin = plugin;
+
+            var settings = plugin.LoadPluginSettings<LbgdbMetadataSettings>();
+            if (settings != null)
+            {
+                LoadValues(settings);
+            }
+        }
 
         public void BeginEdit()
         {

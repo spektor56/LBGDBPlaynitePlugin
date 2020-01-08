@@ -13,6 +13,8 @@ namespace LBGDBMetadata
         private readonly ulong gameId = 0;
         public LbgdbLazyMetadataProvider(MetadataRequestOptions options, LbgdbMetadataPlugin plugin)
         {
+            //Game object is in the options class
+            //This class will search for the game once (name + platform), then use gameid on subsequent lookups to load each metadata field.
             this.options = options;
             this.plugin = plugin;
         }

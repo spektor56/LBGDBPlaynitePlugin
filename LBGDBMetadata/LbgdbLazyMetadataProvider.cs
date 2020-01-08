@@ -94,7 +94,7 @@ namespace LBGDBMetadata
         {
             get
             {
-                return availableFields;
+                return plugin.SupportedFields;
             }
         }
 

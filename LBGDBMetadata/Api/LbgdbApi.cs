@@ -15,14 +15,27 @@ namespace LBGDBMetadata
     {
         readonly HttpClient _client = new HttpClient();
         private Options _options = null;
+        
         public LbgdbApi(Options options)
         {
             _options = options;
         }
-        
-        public async Task<string> DownloadMetadata()
+
+        public async Task<string> GetMetadataHash()
         {
-            var metaDataFullPath = Path.Combine(_options.MetaDataDirectory, _options.MetaDataArchiveName);
+            var headerResponse = await _client.SendAsync(new HttpRequestMessage(HttpMethod.Head, _options.MetaDataURL));
+            return headerResponse.Headers.ETag.Tag;
+        }
+
+        public async Task<Stream> DownloadMetadata()
+        {
+            return await _client.GetStreamAsync(_options.MetaDataURL);
+        }
+
+        private void SomeOtherMethod()
+        {
+            /*
+             var metaDataFullPath = Path.Combine(_options.MetaDataDirectory, _options.MetaDataArchiveName);
             string fileHash = null;
             bool metaDataExists = File.Exists(metaDataFullPath);
             if (metaDataExists)
@@ -44,10 +57,11 @@ namespace LBGDBMetadata
             }
 
             return fileHash;
-        }
+             */
 
-        private void SomeOtherMethod()
-        {/*
+
+
+            /*
             var zipFile = ZipFile.OpenRead(metaDataFullPath);
             var metaData = zipFile.Entries.FirstOrDefault(entry =>
                 entry.Name.Equals(_options.MetaDataFileName, StringComparison.OrdinalIgnoreCase));

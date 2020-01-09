@@ -190,7 +190,7 @@
       <DependentUpon>20200106190510_InitialCreate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\MetaDataContextModelSnapshot.cs" />
-    <Compile Include="Model.cs" />
+    <Compile Include="MetaDataContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

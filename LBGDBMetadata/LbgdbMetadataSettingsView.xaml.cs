@@ -58,7 +58,7 @@ namespace LBGDBMetadata
 
         private async void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            btnRefresh.IsEnabled = await _plugin.NewMetadataAvailable();
+           // btnRefresh.IsEnabled = await _plugin.NewMetadataAvailable();
         }
     }
 }

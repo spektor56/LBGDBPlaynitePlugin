@@ -7,7 +7,7 @@ namespace LBGDBMetadata.LaunchBox.Metadata
     public class Metadata
     {
         [XmlElement(ElementName = "Game")]
-        public List<Game> Game { get; set; }
+        public List<Game> Games { get; set; }
         
         [XmlElement(ElementName = "Platform")]
         public List<Platform> Platform { get; set; }

@@ -8,6 +8,7 @@ using System.Xml;
 using System.Xml.Serialization;
 using LBGDBMetadata.LaunchBox.Api;
 using LBGDBMetadata.LaunchBox.Metadata;
+using Microsoft.EntityFrameworkCore;
 using Playnite.SDK;
 using Playnite.SDK.Plugins;
 using Game = Playnite.SDK.Models.Game;
@@ -86,7 +87,7 @@ namespace LBGDBMetadata
         {
             var newMetadataHash = await _lbgdbApi.GetMetadataHash();
             var zipFile = await _lbgdbApi.DownloadMetadata();
-            await Task.Run(() =>
+            await Task.Run(async () =>
             {
                 using (var zipArchive = new ZipArchive(zipFile, ZipArchiveMode.Read))
                 {
@@ -103,7 +104,9 @@ namespace LBGDBMetadata
                         {
                             XmlSerializer xmlSerializer = new XmlSerializer(typeof(Metadata));
                             gameMetaData = (Metadata)xmlSerializer.Deserialize(reader);
-                            var games = gameMetaData.Game.Where(game => game.Name.Length < 2);
+                            MetaDataContext context = new MetaDataContext();
+                            context.Games.AddRange(gameMetaData.Games);
+                            context.SaveChanges();
                         }
                     }
                 }

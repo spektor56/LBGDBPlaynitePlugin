@@ -16,8 +16,8 @@
             <TextBlock VerticalAlignment="Center" Text="Metadata File Name" />
             <TextBox Name="txtMetaDataFileName" Margin="10,0,0,0" Text="{Binding MetaDataFileName}"  />
         </StackPanel>
-
-        <Button x:Name="btnRefresh" Content="Refresh Metadata" Click="Button_Click" IsEnabled="False"/>
+<CheckBox Name="chkEnabled" />
+        <Button x:Name="btnRefresh" Content="Refresh Metadata" Click="Button_Click" />
         
 
     </StackPanel>

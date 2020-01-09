@@ -28,8 +28,17 @@ namespace LBGDBMetadata
     {
         private static Options _options = new Options();
         private LbgdbApi _lbgdbApi = new LbgdbApi(_options);
+        private LbgdbMetadataSettings _settings;
+        private LbgdbMetadataPlugin _plugin;
+
         public LbgdbMetadataSettingsView()
         {
+            InitializeComponent();
+        }
+
+        public LbgdbMetadataSettingsView(LbgdbMetadataPlugin plugin)
+        {
+            _plugin = plugin;
             InitializeComponent();
         }
 
@@ -39,47 +48,17 @@ namespace LBGDBMetadata
 
             try
             {
-                var zipFile = await _lbgdbApi.DownloadMetadata();
-                Task.Run(() =>
-                {
-                    using (var zipArchive = new ZipArchive(zipFile, ZipArchiveMode.Read))
-                    {
-                        var metaData = zipArchive.Entries.FirstOrDefault(entry =>
-                            entry.Name.Equals(_options.MetaDataFileName, StringComparison.OrdinalIgnoreCase));
-
-                        Metadata gameMetaData;
-
-                        if (metaData != null)
-                        {
-
-                            using (var metaDataStream = metaData.Open())
-                            using (XmlReader reader = XmlReader.Create(metaDataStream))
-                            {
-                                XmlSerializer xmlSerializer = new XmlSerializer(typeof(Metadata));
-                                gameMetaData = (Metadata) xmlSerializer.Deserialize(reader);
-                                var games = gameMetaData.Game.Where(game => game.Name.Length < 2);
-                            }
-                        }
-                    }
-                });
-
+                var currentVersion = await _plugin.UpdateMetadata();
             }
             catch (Exception)
             {
                 btnRefresh.IsEnabled = true;
             }
-            
-            
         }
 
         private async void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            var oldHash = new Options().OldHash;
-            var newHash = await _lbgdbApi.GetMetadataHash();
-
-            txtOldHash.Text = newHash;
-            btnRefresh.IsEnabled = !oldHash.Equals(newHash, StringComparison.OrdinalIgnoreCase);
-
+            btnRefresh.IsEnabled = await _plugin.NewMetadataAvailable();
         }
     }
 }

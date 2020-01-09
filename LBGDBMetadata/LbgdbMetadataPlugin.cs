@@ -1,19 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO.Compression;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Controls;
+using System.Xml;
+using System.Xml.Serialization;
+using LBGDBMetadata.LaunchBox.Api;
+using LBGDBMetadata.LaunchBox.Metadata;
 using Playnite.SDK;
-using Playnite.SDK.Models;
 using Playnite.SDK.Plugins;
+using Game = Playnite.SDK.Models.Game;
 
 namespace LBGDBMetadata
 {
     public class LbgdbMetadataPlugin : MetadataPlugin
     {
+        private readonly LbgdbApi _lbgdbApi;
         internal readonly LbgdbMetadataSettings Settings;
 
         public LbgdbMetadataPlugin(IPlayniteAPI playniteAPI) : base(playniteAPI)
         {
             Settings = new LbgdbMetadataSettings(this);
+            var apiOptions = new Options
+            {
+                MetaDataFileName = Settings.MetaDataFileName,
+                MetaDataURL = Settings.MetaDataURL
+            };
+            _lbgdbApi = new LbgdbApi(apiOptions);
         }
 
         public override ISettings GetSettings(bool firstRunSettings)
@@ -23,7 +37,7 @@ namespace LBGDBMetadata
 
         public override UserControl GetSettingsView(bool firstRunView)
         {
-            return new LbgdbMetadataSettingsView();
+            return new LbgdbMetadataSettingsView(this);
         }
 
 
@@ -60,6 +74,43 @@ namespace LBGDBMetadata
         public override void OnApplicationStarted()
         {
             base.OnApplicationStarted();
+        }
+
+        public async Task<bool> NewMetadataAvailable()
+        {
+            var newMetadataHash= await _lbgdbApi.GetMetadataHash();
+            return !Settings.OldMetadataHash.Equals(newMetadataHash, StringComparison.OrdinalIgnoreCase);
+        }
+
+        public async Task<string> UpdateMetadata()
+        {
+            var newMetadataHash = await _lbgdbApi.GetMetadataHash();
+            var zipFile = await _lbgdbApi.DownloadMetadata();
+            await Task.Run(() =>
+            {
+                using (var zipArchive = new ZipArchive(zipFile, ZipArchiveMode.Read))
+                {
+                    var metaData = zipArchive.Entries.FirstOrDefault(entry =>
+                        entry.Name.Equals(Settings.MetaDataFileName, StringComparison.OrdinalIgnoreCase));
+
+                    Metadata gameMetaData;
+
+                    if (metaData != null)
+                    {
+
+                        using (var metaDataStream = metaData.Open())
+                        using (XmlReader reader = XmlReader.Create(metaDataStream))
+                        {
+                            XmlSerializer xmlSerializer = new XmlSerializer(typeof(Metadata));
+                            gameMetaData = (Metadata)xmlSerializer.Deserialize(reader);
+                            var games = gameMetaData.Game.Where(game => game.Name.Length < 2);
+                        }
+                    }
+                }
+            });
+            Settings.OldMetadataHash = newMetadataHash;
+            Settings.EndEdit();
+            return newMetadataHash;
         }
 
         public override Guid Id { get; } = Guid.Parse("000001D9-DBD1-46C6-B5D0-B1BA559D10E4");

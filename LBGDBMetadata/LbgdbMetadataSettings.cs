@@ -9,13 +9,35 @@ namespace LBGDBMetadata
         private LbgdbMetadataSettings editingClone;
         private readonly LbgdbMetadataPlugin plugin;
 
-        private string oldHash = "";
-        public string OldHash
+        private string oldMetadataHash = "";
+        public string OldMetadataHash
         {
-            get => oldHash;
+            get => oldMetadataHash;
             set
             {
-                oldHash = value;
+                oldMetadataHash = value;
+                OnPropertyChanged();
+            }
+        }
+        
+        private string metaDataURL = @"https://gamesdb.launchbox-app.com/Metadata.zip";
+        public string MetaDataURL
+        {
+            get => metaDataURL;
+            set
+            {
+                metaDataURL = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string metaDataFileName = @"Metadata.xml";
+        public string MetaDataFileName
+        {
+            get => metaDataFileName;
+            set
+            {
+                metaDataFileName = value;
                 OnPropertyChanged();
             }
         }

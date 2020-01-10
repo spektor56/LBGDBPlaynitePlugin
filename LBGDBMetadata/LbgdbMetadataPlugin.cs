@@ -94,25 +94,26 @@ namespace LBGDBMetadata
                     var metaData = zipArchive.Entries.FirstOrDefault(entry =>
                         entry.Name.Equals(Settings.MetaDataFileName, StringComparison.OrdinalIgnoreCase));
 
-                    Metadata gameMetaData;
-
                     if (metaData != null)
                     {
-
                         using (var metaDataStream = metaData.Open())
                         using (XmlReader reader = XmlReader.Create(metaDataStream))
                         {
                             XmlSerializer xmlSerializer = new XmlSerializer(typeof(Metadata));
-                            gameMetaData = (Metadata)xmlSerializer.Deserialize(reader);
-                            MetaDataContext context = new MetaDataContext();
-                            context.Games.AddRange(gameMetaData.Games);
-                            context.SaveChanges();
+                            var gameMetaData = (Metadata)xmlSerializer.Deserialize(reader);
+                            using (var context = new MetaDataContext())
+                            {
+                                await context.Database.ExecuteSqlRawAsync("DELETE FROM GAMES");
+                                await context.Games.AddRangeAsync(gameMetaData.Games);
+                                await context.SaveChangesAsync();
+                            }
                         }
                     }
                 }
             });
             Settings.OldMetadataHash = newMetadataHash;
             Settings.EndEdit();
+
             return newMetadataHash;
         }
 

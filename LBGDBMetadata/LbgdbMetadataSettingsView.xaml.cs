@@ -15,7 +15,6 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Xml;
 using System.Xml.Serialization;
-using LBGDBMetadata.LaunchBox.Api;
 using LBGDBMetadata.LaunchBox.Metadata;
 
 
@@ -26,10 +25,7 @@ namespace LBGDBMetadata
     /// </summary>
     public partial class LbgdbMetadataSettingsView : UserControl
     {
-        private static Options _options = new Options();
-        private LbgdbApi _lbgdbApi = new LbgdbApi(_options);
-        private LbgdbMetadataSettings _settings;
-        private LbgdbMetadataPlugin _plugin;
+        private readonly LbgdbMetadataPlugin _plugin;
 
         public LbgdbMetadataSettingsView()
         {
@@ -48,7 +44,7 @@ namespace LBGDBMetadata
            
             try
             {
-                var currentVersion = await _plugin.UpdateMetadata();
+                var newMetadataHash = await _plugin.UpdateMetadata();
             }
             catch (Exception)
             {
@@ -58,10 +54,7 @@ namespace LBGDBMetadata
 
         private async void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            MetaDataContext context = new MetaDataContext();
-            context.Add(new Game() {DatabaseID = "gwagw"});
-            context.SaveChanges();
-            // btnRefresh.IsEnabled = await _plugin.NewMetadataAvailable();
+            btnRefresh.IsEnabled = await _plugin.NewMetadataAvailable();
         }
     }
 }

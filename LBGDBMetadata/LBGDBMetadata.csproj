@@ -35,6 +35,9 @@
     <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.QualityTools.Testing.Fakes, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
     <Reference Include="Playnite.Common, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Lib\Playnite.Common.dll</HintPath>
@@ -71,9 +74,9 @@
       <DependentUpon>LbgdbMetadataSettingsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="MetaDataContext.cs" />
-    <Compile Include="Migrations\20200106190510_InitialCreate.cs" />
-    <Compile Include="Migrations\20200106190510_InitialCreate.Designer.cs">
-      <DependentUpon>20200106190510_InitialCreate.cs</DependentUpon>
+    <Compile Include="Migrations\20200110192551_InitialCreate.cs" />
+    <Compile Include="Migrations\20200110192551_InitialCreate.designer.cs">
+      <DependentUpon>20200110192551_InitialCreate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\MetaDataContextModelSnapshot.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -89,6 +92,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="extension.yaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="lbgdb.db">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
@@ -108,6 +114,11 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite">
       <Version>3.1.0</Version>
     </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools">
+      <Version>3.1.0</Version>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>12.0.3</Version>
     </PackageReference>
@@ -116,6 +127,9 @@
     </PackageReference>
     <PackageReference Include="System.ComponentModel.Annotations">
       <Version>4.4.1</Version>
+    </PackageReference>
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe">
+      <Version>4.5.2</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup />

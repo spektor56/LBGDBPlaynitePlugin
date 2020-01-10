@@ -59,7 +59,7 @@ namespace LBGDBMetadata
         private async void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
             MetaDataContext context = new MetaDataContext();
-            context.Games.Add(new Game());
+            context.Add(new Game() {DatabaseID = "gwagw"});
             context.SaveChanges();
             // btnRefresh.IsEnabled = await _plugin.NewMetadataAvailable();
         }

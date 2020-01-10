@@ -15,7 +15,7 @@ namespace LBGDBMetadata.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "3.1.0");
 
-            modelBuilder.Entity("LBGDBMetadata.Metadata.Game", b =>
+            modelBuilder.Entity("LBGDBMetadata.LaunchBox.Metadata.Game", b =>
                 {
                     b.Property<string>("DatabaseID")
                         .HasColumnType("TEXT");

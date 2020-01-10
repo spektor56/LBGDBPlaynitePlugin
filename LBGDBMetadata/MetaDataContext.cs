@@ -10,7 +10,7 @@ namespace LBGDBMetadata
     {
         public DbSet<Game> Games { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder options)
-            => options.UseSqlite("Data Source=lbgdb.db");
+            => options.UseSqlite(@"Data Source=Extensions\LBGDBMetadata\lbgdb.db");
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

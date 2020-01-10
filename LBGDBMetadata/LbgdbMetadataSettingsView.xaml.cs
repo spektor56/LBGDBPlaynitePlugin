@@ -45,7 +45,7 @@ namespace LBGDBMetadata
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
             btnRefresh.IsEnabled = false;
-
+           
             try
             {
                 var currentVersion = await _plugin.UpdateMetadata();
@@ -58,7 +58,10 @@ namespace LBGDBMetadata
 
         private async void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-           // btnRefresh.IsEnabled = await _plugin.NewMetadataAvailable();
+            MetaDataContext context = new MetaDataContext();
+            context.Games.Add(new Game());
+            context.SaveChanges();
+            // btnRefresh.IsEnabled = await _plugin.NewMetadataAvailable();
         }
     }
 }

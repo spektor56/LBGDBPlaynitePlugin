@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace WindowsFormsApp8
+namespace AppTest
 {
     static class Program
     {
@@ -15,7 +16,7 @@ namespace WindowsFormsApp8
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new TestForm());
+            Application.Run(new Form1());
         }
     }
 }

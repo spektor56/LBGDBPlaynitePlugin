@@ -75,9 +75,9 @@
       <DependentUpon>LbgdbMetadataSettingsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="MetaDataContext.cs" />
-    <Compile Include="Migrations\20200110192551_InitialCreate.cs" />
-    <Compile Include="Migrations\20200110192551_InitialCreate.designer.cs">
-      <DependentUpon>20200110192551_InitialCreate.cs</DependentUpon>
+    <Compile Include="Migrations\20200113230720_InitialCreate.cs" />
+    <Compile Include="Migrations\20200113230720_InitialCreate.designer.cs">
+      <DependentUpon>20200113230720_InitialCreate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\MetaDataContextModelSnapshot.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -93,9 +93,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="extension.yaml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="lbgdb.db">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

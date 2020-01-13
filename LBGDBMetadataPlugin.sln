@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.29503.13
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LBGDBMetadata", "LBGDBMetadata\LBGDBMetadata.csproj", "{F63EE793-300C-46B5-BF31-E9F71321FFB4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TESTform", "TESTform\TESTform.csproj", "{5E3456B5-8130-44AB-ABB1-E3EA88E82FF3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{F63EE793-300C-46B5-BF31-E9F71321FFB4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F63EE793-300C-46B5-BF31-E9F71321FFB4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F63EE793-300C-46B5-BF31-E9F71321FFB4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5E3456B5-8130-44AB-ABB1-E3EA88E82FF3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5E3456B5-8130-44AB-ABB1-E3EA88E82FF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5E3456B5-8130-44AB-ABB1-E3EA88E82FF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5E3456B5-8130-44AB-ABB1-E3EA88E82FF3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

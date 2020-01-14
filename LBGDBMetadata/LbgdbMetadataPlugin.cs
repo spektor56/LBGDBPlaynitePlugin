@@ -22,6 +22,10 @@ namespace LBGDBMetadata
 
         public LbgdbMetadataPlugin(IPlayniteAPI playniteAPI) : base(playniteAPI)
         {
+            using (var metadataContext = new MetaDataContext())
+            {
+                metadataContext.Database.Migrate();
+            }
             Settings = new LbgdbMetadataSettings(this);
             var apiOptions = new Options
             {

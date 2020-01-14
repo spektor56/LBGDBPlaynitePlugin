@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
 using System.Text;
 using LBGDBMetadata.LaunchBox.Metadata;
 using Microsoft.EntityFrameworkCore;
@@ -10,7 +12,8 @@ namespace LBGDBMetadata
     {
         public DbSet<Game> Games { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder options)
-            => options.UseSqlite(@"Data Source=Extensions\LBGDBMetadata\lbgdb.db");
+            => options.UseSqlite(
+                $@"Data Source={Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "lbgdb.db")}");
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -19,6 +22,7 @@ namespace LBGDBMetadata
                 .HasKey(c => new { c.DatabaseID, c.Region });
                 */
         }
+        
         /*
 
         private Dictionary<string, string> _imageTypeDictionary = new Dictionary<string,string>();

@@ -43,7 +43,10 @@ namespace LBGDBMetadata.LaunchBox.Metadata
         [XmlElement(ElementName = "CommunityRating")]
         public decimal? CommunityRating { get; set; }
 
-        [ForeignKey("DatabaseID")]
+        [InverseProperty("Game")]
         public List<GameImage> Images { get; } = new List<GameImage>();
+
+        [InverseProperty("Game")]
+        public List<GameAlternateName> AlternateNames { get; } = new List<GameAlternateName>();
     }
 }

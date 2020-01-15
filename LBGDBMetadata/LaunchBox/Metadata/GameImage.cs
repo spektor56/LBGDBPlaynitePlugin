@@ -11,6 +11,7 @@ namespace LBGDBMetadata.LaunchBox.Metadata
 
         [XmlElement(ElementName = "DatabaseID")]
         public long DatabaseID { get; set; }
+        public Game Game { get; set; }
         
         [XmlElement(ElementName = "FileName")]
         public string FileName { get; set; }
@@ -20,5 +21,6 @@ namespace LBGDBMetadata.LaunchBox.Metadata
         
         [XmlElement(ElementName = "Region")]
         public string Region { get; set; }
+
     }
 }

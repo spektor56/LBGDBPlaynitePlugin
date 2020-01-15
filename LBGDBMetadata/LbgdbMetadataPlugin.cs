@@ -91,6 +91,36 @@ namespace LBGDBMetadata
             return !Settings.OldMetadataHash.Equals(newMetadataHash, StringComparison.OrdinalIgnoreCase);
         }
 
+        private async Task<int> ImportXml<T>(Stream metaDataStream)
+        {
+            var gameXmlList = metaDataStream.AsEnumerableXml(typeof(T).Name);
+            XmlSerializer xmlSerializer = new XmlSerializer(typeof(T));
+            int i = 0;
+            var context = new MetaDataContext();
+            
+            context.ChangeTracker.AutoDetectChangesEnabled = false;
+            foreach (var gameXml in gameXmlList)
+            {
+                using (var reader = gameXml.CreateReader())
+                {
+                    var game = (T)xmlSerializer.Deserialize(reader);
+
+                    if (i++ > 1000)
+                    {
+                        await context.SaveChangesAsync();
+                        i = 0;
+                        context.Dispose();
+                        context = new MetaDataContext();
+                        context.ChangeTracker.AutoDetectChangesEnabled = false;
+                    }
+
+                    context.Add(game);
+                }
+            }
+
+            return await context.SaveChangesAsync();
+        }
+
         public async Task<string> UpdateMetadata()
         {
             string newMetadataHash = "";
@@ -106,64 +136,24 @@ namespace LBGDBMetadata
 
                     if (metaData != null)
                     {
+                        using (var context = new MetaDataContext())
+                        {
+                            await context.Database.ExecuteSqlRawAsync("DELETE FROM GAMES; DELETE FROM GAMEIMAGES; DELETE FROM GameAlternateName");
+                        }
+                        
                         using (var metaDataStream = metaData.Open())
                         {
-                            var gameXmlList = metaDataStream.AsEnumerableXml("Game");
-                            XmlSerializer xmlSerializer = new XmlSerializer(typeof(LaunchBox.Metadata.Game));
-                            int i = 0;
-                            var context = new MetaDataContext();
-                            await context.Database.ExecuteSqlRawAsync("DELETE FROM GAMES");
-                            context.ChangeTracker.AutoDetectChangesEnabled = false;
-                            foreach (var gameXml in gameXmlList)
-                            {
-                                using (var reader = gameXml.CreateReader())
-                                {
-                                    var game = (LaunchBox.Metadata.Game) xmlSerializer.Deserialize(reader);
-
-                                    if (i++ > 1000)
-                                    {
-                                        await context.SaveChangesAsync();
-                                        i = 0;
-                                        context.Dispose();
-                                        context = new MetaDataContext();
-                                        context.ChangeTracker.AutoDetectChangesEnabled = false;
-                                    }
-
-                                    context.Games.Add(game);
-                                }
-                            }
-
-                            await context.SaveChangesAsync();
+                            await ImportXml<LaunchBox.Metadata.Game>(metaDataStream);
                         }
 
                         using (var metaDataStream = metaData.Open())
                         {
-                            var imageXmlList = metaDataStream.AsEnumerableXml("GameImage");
-                            XmlSerializer xmlSerializer = new XmlSerializer(typeof(GameImage));
-                            int i = 0;
-                            var context = new MetaDataContext();
-                            await context.Database.ExecuteSqlRawAsync("DELETE FROM GAMEIMAGEs");
-                            context.ChangeTracker.AutoDetectChangesEnabled = false;
-                            foreach (var imageXml in imageXmlList)
-                            {
-                                using (var reader = imageXml.CreateReader())
-                                {
-                                    var image = (GameImage)xmlSerializer.Deserialize(reader);
+                            await ImportXml<GameImage>(metaDataStream);
+                        }
 
-                                    if (i++ > 1000)
-                                    {
-                                        await context.SaveChangesAsync();
-                                        i = 0;
-                                        context.Dispose();
-                                        context = new MetaDataContext();
-                                        context.ChangeTracker.AutoDetectChangesEnabled = false;
-                                    }
-
-                                    context.GameImages.Add(image);
-                                }
-                            }
-
-                            await context.SaveChangesAsync();
+                        using (var metaDataStream = metaData.Open())
+                        {
+                            await ImportXml<GameAlternateName>(metaDataStream);
                         }
                     }
                 }
@@ -203,7 +193,7 @@ namespace LBGDBMetadata
                                 context = new MetaDataContext();
                                 context.ChangeTracker.AutoDetectChangesEnabled = false;
                             }
-
+                            
                             context.Games.Add(gameMetaData);
                         }
 

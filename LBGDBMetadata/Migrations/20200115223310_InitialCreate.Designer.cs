@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LBGDBMetadata.Migrations
 {
     [DbContext(typeof(MetaDataContext))]
-    [Migration("20200115135339_InitialCreate")]
+    [Migration("20200115223310_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -59,6 +59,31 @@ namespace LBGDBMetadata.Migrations
                     b.ToTable("Games");
                 });
 
+            modelBuilder.Entity("LBGDBMetadata.LaunchBox.Metadata.GameAlternateName", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("AlternateName")
+                        .HasColumnType("TEXT");
+
+                    b.Property<long>("DatabaseID")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long?>("GameDatabaseID")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Region")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("GameDatabaseID");
+
+                    b.ToTable("GameAlternateName");
+                });
+
             modelBuilder.Entity("LBGDBMetadata.LaunchBox.Metadata.GameImage", b =>
                 {
                     b.Property<int>("ID")
@@ -71,6 +96,9 @@ namespace LBGDBMetadata.Migrations
                     b.Property<string>("FileName")
                         .HasColumnType("TEXT");
 
+                    b.Property<long?>("GameDatabaseID")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Region")
                         .HasColumnType("TEXT");
 
@@ -79,18 +107,23 @@ namespace LBGDBMetadata.Migrations
 
                     b.HasKey("ID");
 
-                    b.HasIndex("DatabaseID");
+                    b.HasIndex("GameDatabaseID");
 
                     b.ToTable("GameImages");
                 });
 
+            modelBuilder.Entity("LBGDBMetadata.LaunchBox.Metadata.GameAlternateName", b =>
+                {
+                    b.HasOne("LBGDBMetadata.LaunchBox.Metadata.Game", "Game")
+                        .WithMany("AlternateNames")
+                        .HasForeignKey("GameDatabaseID");
+                });
+
             modelBuilder.Entity("LBGDBMetadata.LaunchBox.Metadata.GameImage", b =>
                 {
-                    b.HasOne("LBGDBMetadata.LaunchBox.Metadata.Game", null)
+                    b.HasOne("LBGDBMetadata.LaunchBox.Metadata.Game", "Game")
                         .WithMany("Images")
-                        .HasForeignKey("DatabaseID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("GameDatabaseID");
                 });
 #pragma warning restore 612, 618
         }

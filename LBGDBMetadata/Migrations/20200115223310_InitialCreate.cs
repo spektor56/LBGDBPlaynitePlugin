@@ -30,12 +30,35 @@ namespace LBGDBMetadata.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "GameAlternateName",
+                columns: table => new
+                {
+                    ID = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    DatabaseID = table.Column<long>(nullable: false),
+                    GameDatabaseID = table.Column<long>(nullable: true),
+                    AlternateName = table.Column<string>(nullable: true),
+                    Region = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_GameAlternateName", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_GameAlternateName_Games_GameDatabaseID",
+                        column: x => x.GameDatabaseID,
+                        principalTable: "Games",
+                        principalColumn: "DatabaseID",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "GameImages",
                 columns: table => new
                 {
                     ID = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     DatabaseID = table.Column<long>(nullable: false),
+                    GameDatabaseID = table.Column<long>(nullable: true),
                     FileName = table.Column<string>(nullable: true),
                     Type = table.Column<string>(nullable: true),
                     Region = table.Column<string>(nullable: true)
@@ -44,21 +67,29 @@ namespace LBGDBMetadata.Migrations
                 {
                     table.PrimaryKey("PK_GameImages", x => x.ID);
                     table.ForeignKey(
-                        name: "FK_GameImages_Games_DatabaseID",
-                        column: x => x.DatabaseID,
+                        name: "FK_GameImages_Games_GameDatabaseID",
+                        column: x => x.GameDatabaseID,
                         principalTable: "Games",
                         principalColumn: "DatabaseID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_GameImages_DatabaseID",
+                name: "IX_GameAlternateName_GameDatabaseID",
+                table: "GameAlternateName",
+                column: "GameDatabaseID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_GameImages_GameDatabaseID",
                 table: "GameImages",
-                column: "DatabaseID");
+                column: "GameDatabaseID");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "GameAlternateName");
+
             migrationBuilder.DropTable(
                 name: "GameImages");
 

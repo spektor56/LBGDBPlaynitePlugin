@@ -9,17 +9,17 @@ namespace LBGDBMetadata.LaunchBox.Metadata
         [XmlElement(ElementName = "Game")]
         public List<Game> Games { get; set; }
         
-        [XmlElement(ElementName = "Platform")]
-        public List<Platform> Platform { get; set; }
+        //[XmlElement(ElementName = "Platform")]
+        //public List<Platform> Platform { get; set; }
         
-        [XmlElement(ElementName = "PlatformAlternateName")]
-        public List<PlatformAlternateName> PlatformAlternateName { get; set; }
+        //[XmlElement(ElementName = "PlatformAlternateName")]
+        //public List<PlatformAlternateName> PlatformAlternateName { get; set; }
         
-        [XmlElement(ElementName = "Emulator")]
-        public List<Emulator> Emulator { get; set; }
+        //[XmlElement(ElementName = "Emulator")]
+        //public List<Emulator> Emulator { get; set; }
         
-        [XmlElement(ElementName = "EmulatorPlatform")]
-        public List<EmulatorPlatform> EmulatorPlatform { get; set; }
+        //[XmlElement(ElementName = "EmulatorPlatform")]
+        //public List<EmulatorPlatform> EmulatorPlatform { get; set; }
         
         [XmlElement(ElementName = "GameAlternateName")]
         public List<GameAlternateName> GameAlternateName { get; set; }

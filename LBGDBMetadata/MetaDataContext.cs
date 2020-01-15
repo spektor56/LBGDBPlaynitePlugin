@@ -22,6 +22,9 @@ namespace LBGDBMetadata
                 .Property(p => p.ID)
                 .ValueGeneratedOnAdd();
 
+            modelBuilder.Entity<GameAlternateName>()
+                .Property(p => p.ID)
+                .ValueGeneratedOnAdd();
             /*
             modelBuilder.Entity<Metadata.GameAlternateName>()
                 .HasKey(c => new { c.DatabaseID, c.Region });

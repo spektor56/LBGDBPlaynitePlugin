@@ -77,11 +77,20 @@ namespace LBGDBMetadata
         {
             using(var context = new MetaDataContext())
             {
-                var selectedGame = context.Games.FirstOrDefault(game => game.Platform == options.GameData.Platform.Name && game.Name == options.GameData.Name);
-                var coverImages = context.GameImages.Where(image => image.DatabaseID == selectedGame.DatabaseID && LaunchBox.Image.ImageType.Cover.Contains(image.Type));
-                return new MetadataFile("https://images.launchbox-app.com/" + coverImages.First().FileName);
+                var selectedGame = context.Games.FirstOrDefault(game => game.Platform == options.GameData.Platform.Name && (game.Name == options.GameData.Name || game.AlternateNames.Any(alternateName => alternateName.AlternateName == options.GameData.Name)));
+                if (selectedGame != null)
+                {
+                    var coverImages = context.GameImages.FirstOrDefault(image => image.DatabaseID == selectedGame.DatabaseID && LaunchBox.Image.ImageType.Cover.Contains(image.Type));
+                    if (coverImages != null)
+                    {
+                        return new MetadataFile("https://images.launchbox-app.com/" + coverImages.FileName);
+                    }
+                    
+                }
+                
             }
-            
+
+            return new MetadataFile();
         }
 
         public override MetadataFile GetIcon()

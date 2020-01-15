@@ -77,9 +77,9 @@ namespace LBGDBMetadata
         {
             using(var context = new MetaDataContext())
             {
-                var selectedGame = context.Games.Where(game => Regex.Replace(game.Name, "[^a-zA-Z0-9]", "").Equals(Regex.Replace(options.GameData.Name, "[^a-zA-Z0-9]", ""), StringComparison.OrdinalIgnoreCase) && game.Platform.Equals(options.GameData.Platform)).FirstOrDefault();
+                var selectedGame = context.Games.FirstOrDefault(game => game.Platform == options.GameData.Platform.Name && game.Name == options.GameData.Name);
                 var coverImages = context.GameImages.Where(image => image.DatabaseID == selectedGame.DatabaseID && LaunchBox.Image.ImageType.Cover.Contains(image.Type));
-                return new MetadataFile(coverImages.First().FileName);
+                return new MetadataFile("https://images.launchbox-app.com/" + coverImages.First().FileName);
             }
             
         }

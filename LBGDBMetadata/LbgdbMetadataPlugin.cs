@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Threading.Tasks;
@@ -92,11 +93,13 @@ namespace LBGDBMetadata
 
         public async Task<string> UpdateMetadata()
         {
+            string newMetadataHash = "";
+            /*
             var newMetadataHash = await _lbgdbApi.GetMetadataHash();
-            var zipFile = await _lbgdbApi.DownloadMetadata();
+            var zipFile = await _lbgdbApi.DownloadMetadata();*/
             await Task.Run(async () =>
             {
-                using (var zipArchive = new ZipArchive(zipFile, ZipArchiveMode.Read))
+                using (var zipArchive = ZipFile.Open(@"C:\zipTest\Metadata.zip", ZipArchiveMode.Read))
                 {
                     var metaData = zipArchive.Entries.FirstOrDefault(entry =>
                         entry.Name.Equals(Settings.MetaDataFileName, StringComparison.OrdinalIgnoreCase));
@@ -104,23 +107,63 @@ namespace LBGDBMetadata
                     if (metaData != null)
                     {
                         using (var metaDataStream = metaData.Open())
-                        using (XmlReader reader = XmlReader.Create(metaDataStream))
                         {
-                            XmlSerializer xmlSerializer = new XmlSerializer(typeof(Metadata));
-                            var gameMetaData = (Metadata)xmlSerializer.Deserialize(reader);
-                            using (var context = new MetaDataContext())
+                            var gameXmlList = metaDataStream.AsEnumerableXml("Game");
+                            XmlSerializer xmlSerializer = new XmlSerializer(typeof(LaunchBox.Metadata.Game));
+                            int i = 0;
+                            var context = new MetaDataContext();
+                            await context.Database.ExecuteSqlRawAsync("DELETE FROM GAMES");
+                            context.ChangeTracker.AutoDetectChangesEnabled = false;
+                            foreach (var gameXml in gameXmlList)
                             {
-                                await context.Database.ExecuteSqlRawAsync("DELETE FROM GAMES");
-                                await context.Games.AddRangeAsync(gameMetaData.Games);
-                                await context.SaveChangesAsync();
+                                using (var reader = gameXml.CreateReader())
+                                {
+                                    var game = (LaunchBox.Metadata.Game) xmlSerializer.Deserialize(reader);
+
+                                    if (i++ > 1000)
+                                    {
+                                        await context.SaveChangesAsync();
+                                        i = 0;
+                                        context.Dispose();
+                                        context = new MetaDataContext();
+                                        context.ChangeTracker.AutoDetectChangesEnabled = false;
+                                    }
+
+                                    context.Games.Add(game);
+                                }
                             }
 
-                            using (var context = new MetaDataContext())
+                            await context.SaveChangesAsync();
+                        }
+
+                        using (var metaDataStream = metaData.Open())
+                        {
+                            var imageXmlList = metaDataStream.AsEnumerableXml("GameImage");
+                            XmlSerializer xmlSerializer = new XmlSerializer(typeof(GameImage));
+                            int i = 0;
+                            var context = new MetaDataContext();
+                            await context.Database.ExecuteSqlRawAsync("DELETE FROM GAMEIMAGEs");
+                            context.ChangeTracker.AutoDetectChangesEnabled = false;
+                            foreach (var imageXml in imageXmlList)
                             {
-                                await context.Database.ExecuteSqlRawAsync("DELETE FROM GAMEIMAGEs");
-                                await context.GameImages.AddRangeAsync(gameMetaData.GameImage);
-                                await context.SaveChangesAsync();
+                                using (var reader = imageXml.CreateReader())
+                                {
+                                    var image = (GameImage)xmlSerializer.Deserialize(reader);
+
+                                    if (i++ > 1000)
+                                    {
+                                        await context.SaveChangesAsync();
+                                        i = 0;
+                                        context.Dispose();
+                                        context = new MetaDataContext();
+                                        context.ChangeTracker.AutoDetectChangesEnabled = false;
+                                    }
+
+                                    context.GameImages.Add(image);
+                                }
                             }
+
+                            await context.SaveChangesAsync();
                         }
                     }
                 }

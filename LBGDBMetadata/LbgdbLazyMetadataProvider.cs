@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
 using Playnite.SDK.Metadata;
 using Playnite.SDK.Models;
 using Playnite.SDK.Plugins;
@@ -73,8 +75,13 @@ namespace LBGDBMetadata
 
         public override MetadataFile GetCoverImage()
         {
-
-            return base.GetCoverImage();
+            using(var context = new MetaDataContext())
+            {
+                var selectedGame = context.Games.Where(game => Regex.Replace(game.Name, "[^a-zA-Z0-9]", "").Equals(Regex.Replace(options.GameData.Name, "[^a-zA-Z0-9]", ""), StringComparison.OrdinalIgnoreCase) && game.Platform.Equals(options.GameData.Platform)).FirstOrDefault();
+                var coverImages = context.GameImages.Where(image => image.DatabaseID == selectedGame.DatabaseID && LaunchBox.Image.ImageType.Cover.Contains(image.Type));
+                return new MetadataFile(coverImages.First().FileName);
+            }
+            
         }
 
         public override MetadataFile GetIcon()

@@ -6,8 +6,11 @@ using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Xml;
 using System.Xml.Serialization;
+using EFCore.BulkExtensions;
+using LBGDBMetadata.Extensions;
 using LBGDBMetadata.LaunchBox.Api;
 using LBGDBMetadata.LaunchBox.Metadata;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Playnite.SDK;
 using Playnite.SDK.Plugins;
@@ -111,6 +114,13 @@ namespace LBGDBMetadata
                                 await context.Games.AddRangeAsync(gameMetaData.Games);
                                 await context.SaveChangesAsync();
                             }
+
+                            using (var context = new MetaDataContext())
+                            {
+                                await context.Database.ExecuteSqlRawAsync("DELETE FROM GAMEIMAGEs");
+                                await context.GameImages.AddRangeAsync(gameMetaData.GameImage);
+                                await context.SaveChangesAsync();
+                            }
                         }
                     }
                 }
@@ -119,6 +129,44 @@ namespace LBGDBMetadata
             Settings.EndEdit();
 
             return newMetadataHash;
+        }
+
+        public void UpdateMetadata(string filename)
+        {
+            using (var zipArchive = ZipFile.Open(filename, ZipArchiveMode.Read))
+            {
+                var metaData = zipArchive.Entries.FirstOrDefault(entry =>
+                    entry.Name.Equals("MetaData.xml", StringComparison.OrdinalIgnoreCase));
+
+                if (metaData != null)
+                    using (var metaDataStream = metaData.Open())
+                    {
+                        var games = metaDataStream.AsEnumerableXml("Game");
+                        var xmlSerializer = new XmlSerializer(typeof(LaunchBox.Metadata.Game));
+
+                        var i = 0;
+                        var context = new MetaDataContext();
+                        context.ChangeTracker.AutoDetectChangesEnabled = false;
+                        
+                        foreach (var xElement in games)
+                        {
+                            var gameMetaData = (LaunchBox.Metadata.Game)xmlSerializer.Deserialize(xElement.CreateReader());
+                            i++;
+                            if (i++ > 1000)
+                            {
+                                context.SaveChanges();
+                                i = 0;
+                                context.Dispose();
+                                context = new MetaDataContext();
+                                context.ChangeTracker.AutoDetectChangesEnabled = false;
+                            }
+
+                            context.Games.Add(gameMetaData);
+                        }
+
+                        context.Dispose();
+                    }
+            }
         }
 
         public override Guid Id { get; } = Guid.Parse("000001D9-DBD1-46C6-B5D0-B1BA559D10E4");

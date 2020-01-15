@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LBGDBMetadata.Migrations
 {
     [DbContext(typeof(MetaDataContext))]
-    [Migration("20200114040659_InitialCreate")]
+    [Migration("20200115135339_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -57,6 +57,40 @@ namespace LBGDBMetadata.Migrations
                     b.HasKey("DatabaseID");
 
                     b.ToTable("Games");
+                });
+
+            modelBuilder.Entity("LBGDBMetadata.LaunchBox.Metadata.GameImage", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long>("DatabaseID")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("FileName")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Region")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Type")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("DatabaseID");
+
+                    b.ToTable("GameImages");
+                });
+
+            modelBuilder.Entity("LBGDBMetadata.LaunchBox.Metadata.GameImage", b =>
+                {
+                    b.HasOne("LBGDBMetadata.LaunchBox.Metadata.Game", null)
+                        .WithMany("Images")
+                        .HasForeignKey("DatabaseID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

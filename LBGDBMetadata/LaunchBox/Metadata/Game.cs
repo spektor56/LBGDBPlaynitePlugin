@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Xml.Serialization;
 
 namespace LBGDBMetadata.LaunchBox.Metadata
@@ -40,5 +42,8 @@ namespace LBGDBMetadata.LaunchBox.Metadata
         
         [XmlElement(ElementName = "CommunityRating")]
         public decimal? CommunityRating { get; set; }
+
+        [ForeignKey("DatabaseID")]
+        public List<GameImage> Images { get; } = new List<GameImage>();
     }
 }

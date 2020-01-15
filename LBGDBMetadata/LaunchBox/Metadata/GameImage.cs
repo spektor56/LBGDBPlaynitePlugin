@@ -1,12 +1,16 @@
-﻿using System.Xml.Serialization;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Xml.Serialization;
 
 namespace LBGDBMetadata.LaunchBox.Metadata
 {
     [XmlRoot(ElementName = "GameImage")]
     public class GameImage
     {
+        [Key]
+        public int ID { get; set; }
+
         [XmlElement(ElementName = "DatabaseID")]
-        public string DatabaseID { get; set; }
+        public long DatabaseID { get; set; }
         
         [XmlElement(ElementName = "FileName")]
         public string FileName { get; set; }

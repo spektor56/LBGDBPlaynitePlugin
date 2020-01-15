@@ -8,15 +8,20 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LBGDBMetadata
 {
-    public class MetaDataContext : DbContext
+    internal class MetaDataContext : DbContext
     {
         public DbSet<Game> Games { get; set; }
+        public DbSet<GameImage> GameImages { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder options)
             => options.UseSqlite(
                 $@"Data Source={Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "lbgdb.db")}");
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<GameImage>()
+                .Property(p => p.ID)
+                .ValueGeneratedOnAdd();
+
             /*
             modelBuilder.Entity<Metadata.GameAlternateName>()
                 .HasKey(c => new { c.DatabaseID, c.Region });

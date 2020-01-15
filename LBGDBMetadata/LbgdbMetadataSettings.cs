@@ -49,12 +49,13 @@ namespace LBGDBMetadata
         public LbgdbMetadataSettings(LbgdbMetadataPlugin plugin)
         {
             this.plugin = plugin;
-
+            
             var settings = plugin.LoadPluginSettings<LbgdbMetadataSettings>();
             if (settings != null)
             {
                 LoadValues(settings);
             }
+            
         }
 
         public void BeginEdit()

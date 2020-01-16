@@ -3,15 +3,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Controls;
-using System.Xml;
 using System.Xml.Serialization;
-using EFCore.BulkExtensions;
 using LBGDBMetadata.Extensions;
 using LBGDBMetadata.LaunchBox.Api;
 using LBGDBMetadata.LaunchBox.Metadata;
-using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Playnite.SDK;
 using Playnite.SDK.Plugins;
@@ -93,17 +91,23 @@ namespace LBGDBMetadata
 
         private async Task<int> ImportXml<T>(Stream metaDataStream)
         {
-            var gameXmlList = metaDataStream.AsEnumerableXml(typeof(T).Name);
+            var xElementList = metaDataStream.AsEnumerableXml(typeof(T).Name);
             XmlSerializer xmlSerializer = new XmlSerializer(typeof(T));
             int i = 0;
             var context = new MetaDataContext();
             
             context.ChangeTracker.AutoDetectChangesEnabled = false;
-            foreach (var gameXml in gameXmlList)
+            foreach (var xElement in xElementList)
             {
-                using (var reader = gameXml.CreateReader())
+                using (var reader = xElement.CreateReader())
                 {
-                    var game = (T)xmlSerializer.Deserialize(reader);
+                    var deserializedObject = (T)xmlSerializer.Deserialize(reader);
+
+                    var game = deserializedObject as LaunchBox.Metadata.Game;
+                    if (game != null)
+                    {
+                        game.Name = Regex.Replace(game.Name, "[^A-Za-z0-9]", "");
+                    }
 
                     if (i++ > 1000)
                     {
@@ -114,7 +118,7 @@ namespace LBGDBMetadata
                         context.ChangeTracker.AutoDetectChangesEnabled = false;
                     }
 
-                    context.Add(game);
+                    context.Add(deserializedObject);
                 }
             }
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Microsoft.EntityFrameworkCore;
 using Playnite.SDK.Metadata;
 using Playnite.SDK.Models;
 using Playnite.SDK.Plugins;
@@ -77,7 +78,8 @@ namespace LBGDBMetadata
         {
             using(var context = new MetaDataContext())
             {
-                var selectedGame = context.Games.FirstOrDefault(game => game.Platform == options.GameData.Platform.Name && (game.Name == Regex.Replace(options.GameData.Name,"[^A-Za-z0-9]","") || game.AlternateNames.Any(alternateName => alternateName.AlternateName == Regex.Replace(options.GameData.Name, "[^A-Za-z0-9]", ""))));
+                var selectedGame = context.Games.Include(x => x.AlternateNames).FirstOrDefault(game => game.Platform == options.GameData.Platform.Name && (game.Name == Regex.Replace(options.GameData.Name,"[^A-Za-z0-9]","") || game.AlternateNames.Any(alternateName => alternateName.AlternateName == Regex.Replace(options.GameData.Name, "[^A-Za-z0-9]", ""))));
+                
                 if (selectedGame != null)
                 {
                     var coverImages = context.GameImages.FirstOrDefault(image => image.DatabaseID == selectedGame.DatabaseID && LaunchBox.Image.ImageType.Cover.Contains(image.Type));

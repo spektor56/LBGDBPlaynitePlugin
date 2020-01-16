@@ -69,15 +69,12 @@ namespace LBGDBMetadata.Migrations
                     b.Property<long>("DatabaseID")
                         .HasColumnType("INTEGER");
 
-                    b.Property<long?>("GameDatabaseID")
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("Region")
                         .HasColumnType("TEXT");
 
                     b.HasKey("ID");
 
-                    b.HasIndex("GameDatabaseID");
+                    b.HasIndex("DatabaseID");
 
                     b.ToTable("GameAlternateName");
                 });
@@ -94,9 +91,6 @@ namespace LBGDBMetadata.Migrations
                     b.Property<string>("FileName")
                         .HasColumnType("TEXT");
 
-                    b.Property<long?>("GameDatabaseID")
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("Region")
                         .HasColumnType("TEXT");
 
@@ -105,7 +99,7 @@ namespace LBGDBMetadata.Migrations
 
                     b.HasKey("ID");
 
-                    b.HasIndex("GameDatabaseID");
+                    b.HasIndex("DatabaseID");
 
                     b.ToTable("GameImages");
                 });
@@ -114,14 +108,18 @@ namespace LBGDBMetadata.Migrations
                 {
                     b.HasOne("LBGDBMetadata.LaunchBox.Metadata.Game", "Game")
                         .WithMany("AlternateNames")
-                        .HasForeignKey("GameDatabaseID");
+                        .HasForeignKey("DatabaseID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("LBGDBMetadata.LaunchBox.Metadata.GameImage", b =>
                 {
                     b.HasOne("LBGDBMetadata.LaunchBox.Metadata.Game", "Game")
                         .WithMany("Images")
-                        .HasForeignKey("GameDatabaseID");
+                        .HasForeignKey("DatabaseID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

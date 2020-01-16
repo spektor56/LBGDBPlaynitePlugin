@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace LBGDBMetadata.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class initialCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -36,7 +36,6 @@ namespace LBGDBMetadata.Migrations
                     ID = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     DatabaseID = table.Column<long>(nullable: false),
-                    GameDatabaseID = table.Column<long>(nullable: true),
                     AlternateName = table.Column<string>(nullable: true),
                     Region = table.Column<string>(nullable: true)
                 },
@@ -44,11 +43,11 @@ namespace LBGDBMetadata.Migrations
                 {
                     table.PrimaryKey("PK_GameAlternateName", x => x.ID);
                     table.ForeignKey(
-                        name: "FK_GameAlternateName_Games_GameDatabaseID",
-                        column: x => x.GameDatabaseID,
+                        name: "FK_GameAlternateName_Games_DatabaseID",
+                        column: x => x.DatabaseID,
                         principalTable: "Games",
                         principalColumn: "DatabaseID",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -58,7 +57,6 @@ namespace LBGDBMetadata.Migrations
                     ID = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     DatabaseID = table.Column<long>(nullable: false),
-                    GameDatabaseID = table.Column<long>(nullable: true),
                     FileName = table.Column<string>(nullable: true),
                     Type = table.Column<string>(nullable: true),
                     Region = table.Column<string>(nullable: true)
@@ -67,22 +65,22 @@ namespace LBGDBMetadata.Migrations
                 {
                     table.PrimaryKey("PK_GameImages", x => x.ID);
                     table.ForeignKey(
-                        name: "FK_GameImages_Games_GameDatabaseID",
-                        column: x => x.GameDatabaseID,
+                        name: "FK_GameImages_Games_DatabaseID",
+                        column: x => x.DatabaseID,
                         principalTable: "Games",
                         principalColumn: "DatabaseID",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_GameAlternateName_GameDatabaseID",
+                name: "IX_GameAlternateName_DatabaseID",
                 table: "GameAlternateName",
-                column: "GameDatabaseID");
+                column: "DatabaseID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_GameImages_GameDatabaseID",
+                name: "IX_GameImages_DatabaseID",
                 table: "GameImages",
-                column: "GameDatabaseID");
+                column: "DatabaseID");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

@@ -85,7 +85,7 @@ namespace LBGDBMetadata
 
         public async Task<bool> NewMetadataAvailable()
         {
-            var newMetadataHash= await _lbgdbApi.GetMetadataHash();
+            var newMetadataHash = await _lbgdbApi.GetMetadataHash();
             return !Settings.OldMetadataHash.Equals(newMetadataHash, StringComparison.OrdinalIgnoreCase);
         }
 
@@ -95,7 +95,7 @@ namespace LBGDBMetadata
             XmlSerializer xmlSerializer = new XmlSerializer(typeof(T));
             int i = 0;
             var context = new MetaDataContext();
-            
+
             context.ChangeTracker.AutoDetectChangesEnabled = false;
             foreach (var xElement in xElementList)
             {
@@ -103,13 +103,18 @@ namespace LBGDBMetadata
                 {
                     var deserializedObject = (T)xmlSerializer.Deserialize(reader);
 
-                    var game = deserializedObject as LaunchBox.Metadata.Game;
-                    if (game != null)
+                    switch (deserializedObject)
                     {
-                        game.Name = Regex.Replace(game.Name, "[^A-Za-z0-9]", "");
+                        case LaunchBox.Metadata.Game game:
+                            game.Name = Regex.Replace(game.Name, "[^A-Za-z0-9]", "");
+                            break;
+                        case GameAlternateName game:
+                            game.AlternateName =
+                                Regex.Replace(game.AlternateName, "[^A-Za-z0-9]", "");
+                            break;
                     }
 
-                    if (i++ > 1000)
+                    if (i++ > 10000)
                     {
                         await context.SaveChangesAsync();
                         i = 0;
@@ -140,11 +145,13 @@ namespace LBGDBMetadata
 
                     if (metaData != null)
                     {
+                        
                         using (var context = new MetaDataContext())
                         {
-                            await context.Database.ExecuteSqlRawAsync("DELETE FROM GAMES; DELETE FROM GAMEIMAGES; DELETE FROM GameAlternateName");
+                            await context.Database.EnsureDeletedAsync();
+                            await context.Database.EnsureCreatedAsync();
                         }
-                        
+
                         using (var metaDataStream = metaData.Open())
                         {
                             await ImportXml<LaunchBox.Metadata.Game>(metaDataStream);
@@ -184,7 +191,7 @@ namespace LBGDBMetadata
                         var i = 0;
                         var context = new MetaDataContext();
                         context.ChangeTracker.AutoDetectChangesEnabled = false;
-                        
+
                         foreach (var xElement in games)
                         {
                             var gameMetaData = (LaunchBox.Metadata.Game)xmlSerializer.Deserialize(xElement.CreateReader());
@@ -197,7 +204,7 @@ namespace LBGDBMetadata
                                 context = new MetaDataContext();
                                 context.ChangeTracker.AutoDetectChangesEnabled = false;
                             }
-                            
+
                             context.Games.Add(gameMetaData);
                         }
 
@@ -228,7 +235,7 @@ namespace LBGDBMetadata
             //MetadataField.Icon,
             MetadataField.CoverImage,
             MetadataField.BackgroundImage
-            
+
         };
     }
 }

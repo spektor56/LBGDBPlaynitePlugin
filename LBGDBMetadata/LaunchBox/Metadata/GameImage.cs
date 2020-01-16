@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Xml.Serialization;
 
 namespace LBGDBMetadata.LaunchBox.Metadata
@@ -10,6 +11,7 @@ namespace LBGDBMetadata.LaunchBox.Metadata
         public int ID { get; set; }
 
         [XmlElement(ElementName = "DatabaseID")]
+        [ForeignKey("Game")]
         public long DatabaseID { get; set; }
         public Game Game { get; set; }
         

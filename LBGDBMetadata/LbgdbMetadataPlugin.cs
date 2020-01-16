@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Xml.Serialization;
+using EFCore.BulkExtensions;
 using LBGDBMetadata.Extensions;
 using LBGDBMetadata.LaunchBox.Api;
 using LBGDBMetadata.LaunchBox.Metadata;
@@ -99,6 +100,7 @@ namespace LBGDBMetadata
             context.ChangeTracker.AutoDetectChangesEnabled = false;
             foreach (var xElement in xElementList)
             {
+                var objectList = new List<T>();
                 using (var reader = xElement.CreateReader())
                 {
                     var deserializedObject = (T)xmlSerializer.Deserialize(reader);
@@ -113,17 +115,17 @@ namespace LBGDBMetadata
                                 Regex.Replace(game.AlternateName, "[^A-Za-z0-9]", "");
                             break;
                     }
-
+                    
                     if (i++ > 10000)
                     {
-                        await context.SaveChangesAsync();
+                        context.BulkInsert(objectList);
                         i = 0;
                         context.Dispose();
                         context = new MetaDataContext();
                         context.ChangeTracker.AutoDetectChangesEnabled = false;
                     }
 
-                    context.Add(deserializedObject);
+                    objectList.Add(deserializedObject);
                 }
             }
 

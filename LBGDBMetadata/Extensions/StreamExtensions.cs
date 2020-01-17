@@ -16,6 +16,7 @@ namespace LBGDBMetadata.Extensions
             using (var reader = XmlReader.Create(metaDataStream))
             {
                 reader.MoveToContent();
+                bool found = false;
                 while (reader.Read())
                 {
                     switch (reader.NodeType)
@@ -23,15 +24,23 @@ namespace LBGDBMetadata.Extensions
                         case XmlNodeType.Element:
                             if (reader.Name == element)
                             {
+                                found = true;
                                 if (XNode.ReadFrom(reader) is XElement el)
                                 {
                                     yield return el;
                                 }
                             }
-
+                            else
+                            {
+                                if (found)
+                                {
+                                    goto finished;
+                                }
+                            }
                             break;
                     }
                 }
+                finished:;
             }
         }
     }

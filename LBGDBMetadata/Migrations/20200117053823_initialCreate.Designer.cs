@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LBGDBMetadata.Migrations
 {
     [DbContext(typeof(MetaDataContext))]
-    [Migration("20200116194238_initialCreate")]
+    [Migration("20200117053823_initialCreate")]
     partial class initialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -21,7 +21,6 @@ namespace LBGDBMetadata.Migrations
             modelBuilder.Entity("LBGDBMetadata.LaunchBox.Metadata.Game", b =>
                 {
                     b.Property<long>("DatabaseID")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
                     b.Property<decimal?>("CommunityRating")

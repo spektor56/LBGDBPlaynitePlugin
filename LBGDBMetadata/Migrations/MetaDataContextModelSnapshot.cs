@@ -19,7 +19,6 @@ namespace LBGDBMetadata.Migrations
             modelBuilder.Entity("LBGDBMetadata.LaunchBox.Metadata.Game", b =>
                 {
                     b.Property<long>("DatabaseID")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
                     b.Property<decimal?>("CommunityRating")

@@ -10,6 +10,7 @@ namespace LBGDBMetadata.LaunchBox.Metadata
     public class Game
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         [XmlElement(ElementName = "DatabaseID")]
         public long DatabaseID { get; set; }
 

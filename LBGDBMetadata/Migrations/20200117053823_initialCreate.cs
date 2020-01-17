@@ -11,8 +11,7 @@ namespace LBGDBMetadata.Migrations
                 name: "Games",
                 columns: table => new
                 {
-                    DatabaseID = table.Column<long>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                    DatabaseID = table.Column<long>(nullable: false),
                     Name = table.Column<string>(nullable: true),
                     WikipediaURL = table.Column<string>(nullable: true),
                     Platform = table.Column<string>(nullable: true),

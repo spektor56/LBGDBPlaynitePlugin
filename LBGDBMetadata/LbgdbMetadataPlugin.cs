@@ -90,57 +90,64 @@ namespace LBGDBMetadata
             return !Settings.OldMetadataHash.Equals(newMetadataHash, StringComparison.OrdinalIgnoreCase);
         }
 
-        private async Task<int> ImportXml<T>(Stream metaDataStream)
+        private async Task<bool> ImportXml<T>(Stream metaDataStream) where T : class
         {
+            int bufferSize = 10000;
             var xElementList = metaDataStream.AsEnumerableXml(typeof(T).Name);
             XmlSerializer xmlSerializer = new XmlSerializer(typeof(T));
             int i = 0;
             var context = new MetaDataContext();
 
             context.ChangeTracker.AutoDetectChangesEnabled = false;
+            var objectList = new List<T>(bufferSize);
             foreach (var xElement in xElementList)
             {
-                var objectList = new List<T>();
+                T deserializedObject;
                 using (var reader = xElement.CreateReader())
                 {
-                    var deserializedObject = (T)xmlSerializer.Deserialize(reader);
-
-                    switch (deserializedObject)
-                    {
-                        case LaunchBox.Metadata.Game game:
-                            game.Name = Regex.Replace(game.Name, "[^A-Za-z0-9]", "");
-                            break;
-                        case GameAlternateName game:
-                            game.AlternateName =
-                                Regex.Replace(game.AlternateName, "[^A-Za-z0-9]", "");
-                            break;
-                    }
-                    
-                    if (i++ > 10000)
-                    {
-                        context.BulkInsert(objectList);
-                        i = 0;
-                        context.Dispose();
-                        context = new MetaDataContext();
-                        context.ChangeTracker.AutoDetectChangesEnabled = false;
-                    }
-
-                    objectList.Add(deserializedObject);
+                    deserializedObject = (T)xmlSerializer.Deserialize(reader);
                 }
+
+                switch (deserializedObject)
+                {
+                    case LaunchBox.Metadata.Game game:
+                        game.Name = Regex.Replace(game.Name, "[^A-Za-z0-9]", "");
+                        break;
+                    case GameAlternateName game:
+                        game.AlternateName =
+                            Regex.Replace(game.AlternateName, "[^A-Za-z0-9]", "");
+                        break;
+                }
+
+                objectList.Add(deserializedObject);
+
+                if (++i >= bufferSize)
+                {
+                    await context.BulkInsertAsync(objectList);
+                    context.Dispose();
+                    i = 0;
+                    objectList = new List<T>(bufferSize);
+                    context = new MetaDataContext();
+                    context.ChangeTracker.AutoDetectChangesEnabled = false;
+                }
+                
             }
 
-            return await context.SaveChangesAsync();
+            await context.BulkInsertAsync(objectList);
+
+            return true;
         }
 
         public async Task<string> UpdateMetadata()
         {
-            string newMetadataHash = "";
-            /*
+            //string newMetadataHash = "";
+            
             var newMetadataHash = await _lbgdbApi.GetMetadataHash();
-            var zipFile = await _lbgdbApi.DownloadMetadata();*/
+            var zipFile = await _lbgdbApi.DownloadMetadata();
+
             await Task.Run(async () =>
             {
-                using (var zipArchive = ZipFile.Open(@"C:\zipTest\Metadata.zip", ZipArchiveMode.Read))
+                using (var zipArchive = new ZipArchive(zipFile, ZipArchiveMode.Read))
                 {
                     var metaData = zipArchive.Entries.FirstOrDefault(entry =>
                         entry.Name.Equals(Settings.MetaDataFileName, StringComparison.OrdinalIgnoreCase));
@@ -151,7 +158,7 @@ namespace LBGDBMetadata
                         using (var context = new MetaDataContext())
                         {
                             await context.Database.EnsureDeletedAsync();
-                            await context.Database.EnsureCreatedAsync();
+                            await context.Database.MigrateAsync();
                         }
 
                         using (var metaDataStream = metaData.Open())

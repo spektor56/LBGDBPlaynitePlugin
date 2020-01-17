@@ -39,6 +39,9 @@ namespace LBGDBMetadata.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Overview")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Platform")
                         .HasColumnType("TEXT");
 

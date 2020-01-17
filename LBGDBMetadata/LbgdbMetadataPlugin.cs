@@ -241,7 +241,7 @@ namespace LBGDBMetadata
             MetadataField.Links,
             MetadataField.CriticScore,
             MetadataField.CommunityScore,
-            //MetadataField.Icon,
+            MetadataField.Icon,
             MetadataField.CoverImage,
             MetadataField.BackgroundImage
 

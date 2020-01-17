@@ -21,7 +21,8 @@ namespace LBGDBMetadata.Migrations
                     Developer = table.Column<string>(nullable: true),
                     Publisher = table.Column<string>(nullable: true),
                     ReleaseDate = table.Column<DateTime>(nullable: true),
-                    CommunityRating = table.Column<decimal>(nullable: true)
+                    CommunityRating = table.Column<decimal>(nullable: true),
+                    Overview = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {

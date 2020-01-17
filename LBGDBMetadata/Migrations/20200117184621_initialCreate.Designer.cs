@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LBGDBMetadata.Migrations
 {
     [DbContext(typeof(MetaDataContext))]
-    [Migration("20200117053823_initialCreate")]
+    [Migration("20200117184621_initialCreate")]
     partial class initialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -39,6 +39,9 @@ namespace LBGDBMetadata.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Overview")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Platform")

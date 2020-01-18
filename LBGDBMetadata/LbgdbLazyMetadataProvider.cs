@@ -35,7 +35,8 @@ namespace LBGDBMetadata
         {
             using (var context = new MetaDataContext())
             {
-                var selectedGame = context.Games.Include(x => x.AlternateNames).FirstOrDefault(game => game.Platform == options.GameData.Platform.Name && (game.Name == Regex.Replace(options.GameData.Name, "[^A-Za-z0-9]", "") || game.AlternateNames.Any(alternateName => alternateName.AlternateName == Regex.Replace(options.GameData.Name, "[^A-Za-z0-9]", ""))));
+                var gameSearchName = Regex.Replace(options.GameData.Name, "[^A-Za-z0-9]", "").ToLower();
+                var selectedGame = context.Games.FirstOrDefault(game => game.Platform == options.GameData.Platform.Name && (game.Name == gameSearchName || game.AlternateNames.Any(alternateName => alternateName.AlternateName == gameSearchName)));
 
                 if (selectedGame != null)
                 {
@@ -54,7 +55,8 @@ namespace LBGDBMetadata
         {
             using (var context = new MetaDataContext())
             {
-                var selectedGame = context.Games.Include(x => x.AlternateNames).FirstOrDefault(game => game.Platform == options.GameData.Platform.Name && (game.Name == Regex.Replace(options.GameData.Name, "[^A-Za-z0-9]", "") || game.AlternateNames.Any(alternateName => alternateName.AlternateName == Regex.Replace(options.GameData.Name, "[^A-Za-z0-9]", ""))));
+                var gameSearchName = Regex.Replace(options.GameData.Name, "[^A-Za-z0-9]", "").ToLower();
+                var selectedGame = context.Games.FirstOrDefault(game => game.Platform == options.GameData.Platform.Name && (game.Name == gameSearchName || game.AlternateNames.Any(alternateName => alternateName.AlternateName == gameSearchName)));
 
                 if (selectedGame != null)
                 {
@@ -73,7 +75,8 @@ namespace LBGDBMetadata
         {
             using (var context = new MetaDataContext())
             {
-                var selectedGame = context.Games.Include(x => x.AlternateNames).FirstOrDefault(game => game.Platform == options.GameData.Platform.Name && (game.Name == Regex.Replace(options.GameData.Name, "[^A-Za-z0-9]", "") || game.AlternateNames.Any(alternateName => alternateName.AlternateName == Regex.Replace(options.GameData.Name, "[^A-Za-z0-9]", ""))));
+                var gameSearchName = Regex.Replace(options.GameData.Name, "[^A-Za-z0-9]", "").ToLower();
+                var selectedGame = context.Games.FirstOrDefault(game => game.Platform == options.GameData.Platform.Name && (game.Name == gameSearchName || game.AlternateNames.Any(alternateName => alternateName.AlternateName == gameSearchName)));
 
                 if (selectedGame != null)
                 {
@@ -92,7 +95,8 @@ namespace LBGDBMetadata
         {
             using (var context = new MetaDataContext())
             {
-                var selectedGame = context.Games.Include(x => x.AlternateNames).FirstOrDefault(game => game.Platform == options.GameData.Platform.Name && (game.Name == Regex.Replace(options.GameData.Name, "[^A-Za-z0-9]", "") || game.AlternateNames.Any(alternateName => alternateName.AlternateName == Regex.Replace(options.GameData.Name, "[^A-Za-z0-9]", ""))));
+                var gameSearchName = Regex.Replace(options.GameData.Name, "[^A-Za-z0-9]", "").ToLower();
+                var selectedGame = context.Games.FirstOrDefault(game => game.Platform == options.GameData.Platform.Name && (game.Name == gameSearchName || game.AlternateNames.Any(alternateName => alternateName.AlternateName == gameSearchName)));
 
                 if (selectedGame != null)
                 {
@@ -111,7 +115,8 @@ namespace LBGDBMetadata
         {
             using (var context = new MetaDataContext())
             {
-                var selectedGame = context.Games.Include(x => x.AlternateNames).FirstOrDefault(game => game.Platform == options.GameData.Platform.Name && (game.Name == Regex.Replace(options.GameData.Name, "[^A-Za-z0-9]", "") || game.AlternateNames.Any(alternateName => alternateName.AlternateName == Regex.Replace(options.GameData.Name, "[^A-Za-z0-9]", ""))));
+                var gameSearchName = Regex.Replace(options.GameData.Name, "[^A-Za-z0-9]", "").ToLower();
+                var selectedGame = context.Games.FirstOrDefault(game => game.Platform == options.GameData.Platform.Name && (game.Name == gameSearchName || game.AlternateNames.Any(alternateName => alternateName.AlternateName == gameSearchName)));
 
                 if (selectedGame != null)
                 {
@@ -132,7 +137,8 @@ namespace LBGDBMetadata
         {
             using (var context = new MetaDataContext())
             {
-                var selectedGame = context.Games.Include(x => x.AlternateNames).FirstOrDefault(game => game.Platform == options.GameData.Platform.Name && (game.Name == Regex.Replace(options.GameData.Name, "[^A-Za-z0-9]", "") || game.AlternateNames.Any(alternateName => alternateName.AlternateName == Regex.Replace(options.GameData.Name, "[^A-Za-z0-9]", ""))));
+                var gameSearchName = Regex.Replace(options.GameData.Name, "[^A-Za-z0-9]", "").ToLower();
+                var selectedGame = context.Games.FirstOrDefault(game => game.Platform == options.GameData.Platform.Name && (game.Name == gameSearchName || game.AlternateNames.Any(alternateName => alternateName.AlternateName == gameSearchName)));
 
                 if (selectedGame != null)
                 {
@@ -152,7 +158,8 @@ namespace LBGDBMetadata
         {
             using (var context = new MetaDataContext())
             {
-                var selectedGame = context.Games.Include(x => x.AlternateNames).FirstOrDefault(game => game.Platform == options.GameData.Platform.Name && (game.Name == Regex.Replace(options.GameData.Name, "[^A-Za-z0-9]", "") || game.AlternateNames.Any(alternateName => alternateName.AlternateName == Regex.Replace(options.GameData.Name, "[^A-Za-z0-9]", ""))));
+                var gameSearchName = Regex.Replace(options.GameData.Name, "[^A-Za-z0-9]", "").ToLower();
+                var selectedGame = context.Games.FirstOrDefault(game => game.Platform == options.GameData.Platform.Name && (game.Name == gameSearchName || game.AlternateNames.Any(alternateName => alternateName.AlternateName == gameSearchName)));
 
                 if (selectedGame != null)
                 {
@@ -170,7 +177,8 @@ namespace LBGDBMetadata
         {
             using(var context = new MetaDataContext())
             {
-                var selectedGame = context.Games.Include(x => x.AlternateNames).FirstOrDefault(game => game.Platform == options.GameData.Platform.Name && (game.Name == Regex.Replace(options.GameData.Name,"[^A-Za-z0-9]","") || game.AlternateNames.Any(alternateName => alternateName.AlternateName == Regex.Replace(options.GameData.Name, "[^A-Za-z0-9]", ""))));
+                var gameSearchName = Regex.Replace(options.GameData.Name, "[^A-Za-z0-9]", "").ToLower();
+                var selectedGame = context.Games.FirstOrDefault(game => game.Platform == options.GameData.Platform.Name && (game.Name == Regex.Replace(options.GameData.Name,"[^A-Za-z0-9]","").ToLower() || game.AlternateNames.Any(alternateName => alternateName.AlternateName == gameSearchName)));
                 
                 if (selectedGame != null)
                 {
@@ -193,7 +201,8 @@ namespace LBGDBMetadata
         {
             using (var context = new MetaDataContext())
             {
-                var selectedGame = context.Games.Include(x => x.AlternateNames).FirstOrDefault(game => game.Platform == options.GameData.Platform.Name && (game.Name == Regex.Replace(options.GameData.Name, "[^A-Za-z0-9]", "") || game.AlternateNames.Any(alternateName => alternateName.AlternateName == Regex.Replace(options.GameData.Name, "[^A-Za-z0-9]", ""))));
+                var gameSearchName = Regex.Replace(options.GameData.Name, "[^A-Za-z0-9]", "").ToLower();
+                var selectedGame = context.Games.FirstOrDefault(game => game.Platform == options.GameData.Platform.Name && (game.Name == gameSearchName || game.AlternateNames.Any(alternateName => alternateName.AlternateName == gameSearchName)));
 
                 if (selectedGame != null)
                 {
@@ -214,7 +223,8 @@ namespace LBGDBMetadata
         {
             using (var context = new MetaDataContext())
             {
-                var selectedGame = context.Games.Include(x => x.AlternateNames).FirstOrDefault(game => game.Platform == options.GameData.Platform.Name && (game.Name == Regex.Replace(options.GameData.Name, "[^A-Za-z0-9]", "") || game.AlternateNames.Any(alternateName => alternateName.AlternateName == Regex.Replace(options.GameData.Name, "[^A-Za-z0-9]", ""))));
+                var gameSearchName = Regex.Replace(options.GameData.Name, "[^A-Za-z0-9]", "").ToLower();
+                var selectedGame = context.Games.FirstOrDefault(game => game.Platform == options.GameData.Platform.Name && (game.Name == gameSearchName || game.AlternateNames.Any(alternateName => alternateName.AlternateName == gameSearchName)));
 
                 if (selectedGame != null)
                 {

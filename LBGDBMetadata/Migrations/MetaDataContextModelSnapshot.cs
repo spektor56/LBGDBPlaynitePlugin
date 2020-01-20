@@ -39,10 +39,16 @@ namespace LBGDBMetadata.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("NameSearch")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Overview")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Platform")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PlatformSearch")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Publisher")
@@ -55,6 +61,8 @@ namespace LBGDBMetadata.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("DatabaseID");
+
+                    b.HasIndex("PlatformSearch", "NameSearch");
 
                     b.ToTable("Games");
                 });
@@ -71,12 +79,17 @@ namespace LBGDBMetadata.Migrations
                     b.Property<long>("DatabaseID")
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("NameSearch")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Region")
                         .HasColumnType("TEXT");
 
                     b.HasKey("ID");
 
                     b.HasIndex("DatabaseID");
+
+                    b.HasIndex("NameSearch");
 
                     b.ToTable("GameAlternateName");
                 });

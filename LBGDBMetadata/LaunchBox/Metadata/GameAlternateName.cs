@@ -18,6 +18,8 @@ namespace LBGDBMetadata.LaunchBox.Metadata
         [XmlElement(ElementName = "AlternateName")]
         public string AlternateName { get; set; }
 
+        public string NameSearch { get; set; }
+
         [XmlElement(ElementName = "Region")]
         public string Region { get; set; }
     }

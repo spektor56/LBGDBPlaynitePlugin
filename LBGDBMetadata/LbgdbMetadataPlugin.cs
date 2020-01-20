@@ -111,11 +111,11 @@ namespace LBGDBMetadata
                 switch (deserializedObject)
                 {
                     case LaunchBox.Metadata.Game game:
-                        game.Name = Regex.Replace(game.Name, "[^A-Za-z0-9]", "").ToLower();
+                        game.NameSearch = Regex.Replace(game.Name, "[^A-Za-z0-9]", "").ToLower();
+                        game.PlatformSearch = Regex.Replace(game.Platform, "[^A-Za-z0-9]", "").ToLower();
                         break;
                     case GameAlternateName game:
-                        game.AlternateName =
-                            Regex.Replace(game.AlternateName, "[^A-Za-z0-9]", "").ToLower();
+                        game.NameSearch = Regex.Replace(game.AlternateName, "[^A-Za-z0-9]", "").ToLower();
                         break;
                 }
 

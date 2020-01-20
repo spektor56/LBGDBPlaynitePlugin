@@ -47,6 +47,9 @@ namespace LBGDBMetadata.LaunchBox.Metadata
         [XmlElement(ElementName = "Overview")]
         public string Overview { get; set; }
 
+        public string NameSearch { get; set; }
+        public string PlatformSearch { get; set; }
+
         [InverseProperty("Game")]
         public List<GameImage> Images { get; } = new List<GameImage>();
 

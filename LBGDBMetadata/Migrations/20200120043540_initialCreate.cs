@@ -22,7 +22,9 @@ namespace LBGDBMetadata.Migrations
                     Publisher = table.Column<string>(nullable: true),
                     ReleaseDate = table.Column<DateTime>(nullable: true),
                     CommunityRating = table.Column<decimal>(nullable: true),
-                    Overview = table.Column<string>(nullable: true)
+                    Overview = table.Column<string>(nullable: true),
+                    NameSearch = table.Column<string>(nullable: true),
+                    PlatformSearch = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -37,6 +39,7 @@ namespace LBGDBMetadata.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     DatabaseID = table.Column<long>(nullable: false),
                     AlternateName = table.Column<string>(nullable: true),
+                    NameSearch = table.Column<string>(nullable: true),
                     Region = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -78,9 +81,19 @@ namespace LBGDBMetadata.Migrations
                 column: "DatabaseID");
 
             migrationBuilder.CreateIndex(
+                name: "IX_GameAlternateName_NameSearch",
+                table: "GameAlternateName",
+                column: "NameSearch");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_GameImages_DatabaseID",
                 table: "GameImages",
                 column: "DatabaseID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Games_PlatformSearch_NameSearch",
+                table: "Games",
+                columns: new[] { "PlatformSearch", "NameSearch" });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

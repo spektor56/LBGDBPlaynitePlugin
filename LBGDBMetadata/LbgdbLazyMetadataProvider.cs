@@ -16,6 +16,9 @@ namespace LBGDBMetadata
         private readonly MetadataRequestOptions options;
         private readonly LbgdbMetadataPlugin plugin;
         private readonly ulong gameId = 0;
+        private LaunchBox.Metadata.Game _game;
+        private List<MetadataField> availableFields;
+
         public LbgdbLazyMetadataProvider(MetadataRequestOptions options, LbgdbMetadataPlugin plugin)
         {
             //Game object is in the options class
@@ -29,42 +32,49 @@ namespace LBGDBMetadata
             this.gameId = gameId;
             this.plugin = plugin;
         }
-
-        private List<MetadataField> availableFields;
-        public override string GetName()
+                
+        private LaunchBox.Metadata.Game GetGame()
         {
-            using (var context = new MetaDataContext())
+            if (_game is null)
             {
-                var gameSearchName = Regex.Replace(options.GameData.Name, "[^A-Za-z0-9]", "").ToLower();
-                var selectedGame = context.Games.FirstOrDefault(game => game.Platform == options.GameData.Platform.Name && (game.Name == gameSearchName || game.AlternateNames.Any(alternateName => alternateName.AlternateName == gameSearchName)));
-
-                if (selectedGame != null)
+                using (var context = new MetaDataContext())
                 {
-                    if (!string.IsNullOrWhiteSpace(selectedGame.Name))
-                    {
-                        return selectedGame.Name;
-                    }
-
+                    var gameSearchName = Regex.Replace(options.GameData.Name, "[^A-Za-z0-9]", "").ToLower();
+                    var platformSearchName = Regex.Replace(options.GameData.Platform.Name, "[^A-Za-z0-9]", "").ToLower();
+                    _game = context.Games.FirstOrDefault(game => game.PlatformSearch == platformSearchName && (game.NameSearch == gameSearchName || game.AlternateNames.Any(alternateName => alternateName.NameSearch == gameSearchName)));
+                    return _game;
                 }
             }
+            else
+            {
+                return _game;
+            }
+        }
 
+        public override string GetName()
+        {
+            var game = GetGame();
+            
+            if (game != null)
+            {
+                if (!string.IsNullOrWhiteSpace(game.Name))
+                {
+                    return game.Name;
+                }
+            }
+            
             return base.GetName();
         }
 
         public override List<string> GetGenres()
         {
-            using (var context = new MetaDataContext())
+            var game = GetGame();
+
+            if (game != null)
             {
-                var gameSearchName = Regex.Replace(options.GameData.Name, "[^A-Za-z0-9]", "").ToLower();
-                var selectedGame = context.Games.FirstOrDefault(game => game.Platform == options.GameData.Platform.Name && (game.Name == gameSearchName || game.AlternateNames.Any(alternateName => alternateName.AlternateName == gameSearchName)));
-
-                if (selectedGame != null)
+                if (!string.IsNullOrWhiteSpace(game.Genres))
                 {
-                    if (!string.IsNullOrWhiteSpace(selectedGame.Genres))
-                    {
-                        return new List<string>() { selectedGame.Genres };
-                    }
-
+                    return new List<string>() { game.Genres };
                 }
             }
 
@@ -73,18 +83,13 @@ namespace LBGDBMetadata
 
         public override DateTime? GetReleaseDate()
         {
-            using (var context = new MetaDataContext())
+            var game = GetGame();
+
+            if (game != null)
             {
-                var gameSearchName = Regex.Replace(options.GameData.Name, "[^A-Za-z0-9]", "").ToLower();
-                var selectedGame = context.Games.FirstOrDefault(game => game.Platform == options.GameData.Platform.Name && (game.Name == gameSearchName || game.AlternateNames.Any(alternateName => alternateName.AlternateName == gameSearchName)));
-
-                if (selectedGame != null)
+                if (game.ReleaseDate != null)
                 {
-                    if (selectedGame.ReleaseDate != null)
-                    {
-                        return selectedGame.ReleaseDate;
-                    }
-
+                    return game.ReleaseDate;
                 }
             }
 
@@ -93,18 +98,13 @@ namespace LBGDBMetadata
 
         public override List<string> GetDevelopers()
         {
-            using (var context = new MetaDataContext())
+            var game = GetGame();
+
+            if (game != null)
             {
-                var gameSearchName = Regex.Replace(options.GameData.Name, "[^A-Za-z0-9]", "").ToLower();
-                var selectedGame = context.Games.FirstOrDefault(game => game.Platform == options.GameData.Platform.Name && (game.Name == gameSearchName || game.AlternateNames.Any(alternateName => alternateName.AlternateName == gameSearchName)));
-
-                if (selectedGame != null)
+                if (!string.IsNullOrWhiteSpace(game.Developer))
                 {
-                    if (!string.IsNullOrWhiteSpace(selectedGame.Developer))
-                    {
-                        return new List<string>() { selectedGame.Developer };
-                    }
-
+                    return new List<string>() { game.Developer };
                 }
             }
 
@@ -113,19 +113,13 @@ namespace LBGDBMetadata
 
         public override List<string> GetPublishers()
         {
-            using (var context = new MetaDataContext())
+            var game = GetGame();
+
+            if (game != null)
             {
-                var gameSearchName = Regex.Replace(options.GameData.Name, "[^A-Za-z0-9]", "").ToLower();
-                var selectedGame = context.Games.FirstOrDefault(game => game.Platform == options.GameData.Platform.Name && (game.Name == gameSearchName || game.AlternateNames.Any(alternateName => alternateName.AlternateName == gameSearchName)));
-
-                if (selectedGame != null)
+                if (!string.IsNullOrWhiteSpace(game.Publisher))
                 {
-
-                    if (!string.IsNullOrWhiteSpace(selectedGame.Publisher))
-                    {
-                        return new List<string>() { selectedGame.Publisher };
-                    }
-
+                    return new List<string>() { game.Publisher };
                 }
             }
 
@@ -135,19 +129,13 @@ namespace LBGDBMetadata
 
         public override string GetDescription()
         {
-            using (var context = new MetaDataContext())
-            {
-                var gameSearchName = Regex.Replace(options.GameData.Name, "[^A-Za-z0-9]", "").ToLower();
-                var selectedGame = context.Games.FirstOrDefault(game => game.Platform == options.GameData.Platform.Name && (game.Name == gameSearchName || game.AlternateNames.Any(alternateName => alternateName.AlternateName == gameSearchName)));
+            var game = GetGame();
 
-                if (selectedGame != null)
+            if (game != null)
+            {
+                if (!string.IsNullOrWhiteSpace(game.Overview))
                 {
-                    
-                    if (!string.IsNullOrWhiteSpace(selectedGame.Overview))
-                    {
-                        return selectedGame.Overview;
-                    }
-                    
+                    return game.Overview;
                 }
             }
 
@@ -156,17 +144,13 @@ namespace LBGDBMetadata
 
         public override int? GetCommunityScore()
         {
-            using (var context = new MetaDataContext())
-            {
-                var gameSearchName = Regex.Replace(options.GameData.Name, "[^A-Za-z0-9]", "").ToLower();
-                var selectedGame = context.Games.FirstOrDefault(game => game.Platform == options.GameData.Platform.Name && (game.Name == gameSearchName || game.AlternateNames.Any(alternateName => alternateName.AlternateName == gameSearchName)));
+            var game = GetGame();
 
-                if (selectedGame != null)
+            if (game != null)
+            {
+                if (game.CommunityRating != null)
                 {
-                    if (selectedGame.CommunityRating != null)
-                    {
-                        return (int)selectedGame.CommunityRating;
-                    }
+                    return (int)game.CommunityRating;
                 }
             }
 
@@ -175,65 +159,52 @@ namespace LBGDBMetadata
 
         public override MetadataFile GetCoverImage()
         {
-            using(var context = new MetaDataContext())
+            var game = GetGame();
+            
+            if (game != null)
             {
-                var gameSearchName = Regex.Replace(options.GameData.Name, "[^A-Za-z0-9]", "").ToLower();
-                var selectedGame = context.Games.FirstOrDefault(game => game.Platform == options.GameData.Platform.Name && (game.Name == Regex.Replace(options.GameData.Name,"[^A-Za-z0-9]","").ToLower() || game.AlternateNames.Any(alternateName => alternateName.AlternateName == gameSearchName)));
-                
-                if (selectedGame != null)
+                using (var context = new MetaDataContext())
                 {
-                    var coverImages = context.GameImages.FirstOrDefault(image => image.DatabaseID == selectedGame.DatabaseID && LaunchBox.Image.ImageType.Cover.Contains(image.Type));
+                    var coverImages = context.GameImages.FirstOrDefault(image => image.DatabaseID == game.DatabaseID && LaunchBox.Image.ImageType.Cover.Contains(image.Type));
                     if (coverImages != null)
                     {
                         return new MetadataFile("https://images.launchbox-app.com/" + coverImages.FileName);
                     }
-                    
                 }
-                
             }
 
             return base.GetCoverImage();
         }
 
-
-
         public override MetadataFile GetBackgroundImage()
         {
-            using (var context = new MetaDataContext())
-            {
-                var gameSearchName = Regex.Replace(options.GameData.Name, "[^A-Za-z0-9]", "").ToLower();
-                var selectedGame = context.Games.FirstOrDefault(game => game.Platform == options.GameData.Platform.Name && (game.Name == gameSearchName || game.AlternateNames.Any(alternateName => alternateName.AlternateName == gameSearchName)));
+            var game = GetGame();
 
-                if (selectedGame != null)
+            if (game != null)
+            {
+                using (var context = new MetaDataContext())
                 {
-                    var backgroundImages = context.GameImages.FirstOrDefault(image => image.DatabaseID == selectedGame.DatabaseID && LaunchBox.Image.ImageType.Background.Contains(image.Type));
+                    var backgroundImages = context.GameImages.FirstOrDefault(image => image.DatabaseID == game.DatabaseID && LaunchBox.Image.ImageType.Background.Contains(image.Type));
                     if (backgroundImages != null)
                     {
                         return new MetadataFile("https://images.launchbox-app.com/" + backgroundImages.FileName);
                     }
 
                 }
-
-            }
+            }       
 
             return base.GetBackgroundImage();
         }
 
         public override List<Link> GetLinks()
         {
-            using (var context = new MetaDataContext())
+            var game = GetGame();
+
+            if (game != null)
             {
-                var gameSearchName = Regex.Replace(options.GameData.Name, "[^A-Za-z0-9]", "").ToLower();
-                var selectedGame = context.Games.FirstOrDefault(game => game.Platform == options.GameData.Platform.Name && (game.Name == gameSearchName || game.AlternateNames.Any(alternateName => alternateName.AlternateName == gameSearchName)));
-
-                if (selectedGame != null)
+                if (!string.IsNullOrWhiteSpace(game.WikipediaURL))
                 {
-
-                    if (!string.IsNullOrWhiteSpace(selectedGame.WikipediaURL))
-                    {
-                        return new List<Link>() { new Link("Wikipedia", selectedGame.WikipediaURL) };
-                    }
-
+                    return new List<Link>() { new Link("Wikipedia", game.WikipediaURL) };
                 }
             }
 
@@ -259,7 +230,6 @@ namespace LBGDBMetadata
 
         public override int? GetCriticScore()
         {
-
             return base.GetCriticScore();
         }
 
@@ -267,9 +237,5 @@ namespace LBGDBMetadata
         {
             return base.GetTags();
         }
-
-
-
-
     }
 }

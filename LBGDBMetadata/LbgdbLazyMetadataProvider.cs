@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using LBGDBMetadata.Extensions;
 using LBGDBMetadata.LaunchBox.Metadata;
 using Microsoft.EntityFrameworkCore;
 using Playnite.SDK.Metadata;
@@ -99,8 +100,8 @@ namespace LBGDBMetadata
             {
                 using (var context = new MetaDataContext())
                 {
-                    var gameSearchName = Regex.Replace(options.GameData.Name, "[^A-Za-z0-9]", "").ToLower();
-                    var platformSearchName = Regex.Replace(options.GameData.Platform.Name, "[^A-Za-z0-9]", "").ToLower();
+                    var gameSearchName = options.GameData.Name.Sanitize();
+                    var platformSearchName = options.GameData.Platform.Name.Sanitize();
                     _game = context.Games.FirstOrDefault(game => game.PlatformSearch == platformSearchName && (game.NameSearch == gameSearchName || game.AlternateNames.Any(alternateName => alternateName.NameSearch == gameSearchName)));
                     return _game;
                 }

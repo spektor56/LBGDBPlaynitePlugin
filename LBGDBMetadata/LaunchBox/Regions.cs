@@ -32,6 +32,10 @@ namespace LBGDBMetadata.LaunchBox
             public const string SouthAmerica = "South America";
             public const string HongKong = "Hong Kong";
             public const string Greece = "Greece";
+            public const string Finland = "Finland";
+            public const string Holland = "Holland";
+            public const string Netherlands = "The Netherlands";
+            public const string Thailand = "Thailand";
 
     }
 }

@@ -35,16 +35,16 @@ namespace LBGDBMetadata
             this.plugin = plugin;
         }
 
-        private GameImage GetBestImage(List<GameImage> images)
+        private GameImage GetBestImage(List<GameImage> images, HashSet<string> imageTypes)
         {
             if (images.Count < 1)
             {
                 return null;
             }
             IOrderedEnumerable<GameImage> filteredImages;
-            foreach (var coverType in LaunchBox.Image.ImageType.Cover)
+            foreach (var coverType in imageTypes)
             {
-                if (!images.Any(image => image.Type == coverType))
+                if (images.All(image => image.Type != coverType))
                 {
                     continue;
                 }
@@ -226,10 +226,10 @@ namespace LBGDBMetadata
             {
                 using (var context = new MetaDataContext())
                 {
-                    var coverImages = GetBestImage(context.GameImages.Where(image => image.DatabaseID == game.DatabaseID && LaunchBox.Image.ImageType.Cover.Contains(image.Type)).ToList());
-                    if (coverImages != null)
+                    var coverImage = GetBestImage(context.GameImages.Where(image => image.DatabaseID == game.DatabaseID && LaunchBox.Image.ImageType.Cover.Contains(image.Type)).ToList(), LaunchBox.Image.ImageType.Cover);
+                    if (coverImage != null)
                     {
-                        return new MetadataFile("https://images.launchbox-app.com/" + coverImages.FileName);
+                        return new MetadataFile("https://images.launchbox-app.com/" + coverImage.FileName);
                     }
                 }
             }
@@ -245,10 +245,10 @@ namespace LBGDBMetadata
             {
                 using (var context = new MetaDataContext())
                 {
-                    var backgroundImages = GetBestImage(context.GameImages.Where(image => image.DatabaseID == game.DatabaseID && LaunchBox.Image.ImageType.Background.Contains(image.Type)).ToList());
-                    if (backgroundImages != null)
+                    var backgroundImage = GetBestImage(context.GameImages.Where(image => image.DatabaseID == game.DatabaseID && LaunchBox.Image.ImageType.Background.Contains(image.Type)).ToList(), LaunchBox.Image.ImageType.Background);
+                    if (backgroundImage != null)
                     {
-                        return new MetadataFile("https://images.launchbox-app.com/" + backgroundImages.FileName);
+                        return new MetadataFile("https://images.launchbox-app.com/" + backgroundImage.FileName);
                     }
                 }
             }       

@@ -113,6 +113,10 @@ namespace LBGDBMetadata
                     case LaunchBox.Metadata.Game game:
                         game.NameSearch = Regex.Replace(game.Name, "[^A-Za-z0-9]", "").ToLower();
                         game.PlatformSearch = Regex.Replace(game.Platform, "[^A-Za-z0-9]", "").ToLower();
+                        if(game.CommunityRating != null)
+                        {
+                            game.CommunityRating = Math.Round(((decimal)game.CommunityRating / 5) * 100, 0);
+                        }
                         break;
                     case GameAlternateName game:
                         game.NameSearch = Regex.Replace(game.AlternateName, "[^A-Za-z0-9]", "").ToLower();

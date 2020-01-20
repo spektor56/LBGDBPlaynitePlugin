@@ -70,6 +70,7 @@
     <Compile Include="LaunchBox\Metadata\Metadata.cs" />
     <Compile Include="LaunchBox\Metadata\Platform.cs" />
     <Compile Include="LaunchBox\Metadata\PlatformAlternateName.cs" />
+    <Compile Include="LaunchBox\Regions.cs" />
     <Compile Include="LbgdbLazyMetadataProvider.cs" />
     <Compile Include="LbgdbMetadataPlugin.cs" />
     <Compile Include="LbgdbMetadataSettings.cs" />

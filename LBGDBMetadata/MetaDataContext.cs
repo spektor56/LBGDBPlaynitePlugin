@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LBGDBMetadata
 {
-    internal class MetaDataContext : DbContext
+    public class MetaDataContext : DbContext
     {
         public DbSet<Game> Games { get; set; }
         public DbSet<GameImage> GameImages { get; set; }

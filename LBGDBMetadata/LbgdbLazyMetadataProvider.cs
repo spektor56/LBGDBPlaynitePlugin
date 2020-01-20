@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using LBGDBMetadata.LaunchBox.Metadata;
 using Microsoft.EntityFrameworkCore;
 using Playnite.SDK.Metadata;
 using Playnite.SDK.Models;
@@ -32,7 +33,66 @@ namespace LBGDBMetadata
             this.gameId = gameId;
             this.plugin = plugin;
         }
-                
+
+        private GameImage GetBestImage(List<GameImage> images)
+        {
+            if (images.Count < 1)
+            {
+                return null;
+            }
+            IOrderedEnumerable<GameImage> filteredImages;
+            foreach (var coverType in LaunchBox.Image.ImageType.Cover)
+            {
+                if (!images.Any(image => image.Type == coverType))
+                {
+                    continue;
+                }
+
+                filteredImages = images.Where(image => image.Type == coverType && image.Region != null && image.Region.Equals(LaunchBox.Region.Canada, StringComparison.OrdinalIgnoreCase)).OrderByDescending(image => image.ID);
+                if (filteredImages.Any())
+                {
+                    return filteredImages.First();
+                }
+             
+                filteredImages = images.Where(image => image.Type == coverType && image.Region != null && image.Region.Equals(LaunchBox.Region.NorthAmerica, StringComparison.OrdinalIgnoreCase)).OrderByDescending(image => image.ID);
+                if (filteredImages.Any())
+                {
+                    return filteredImages.First();
+                }
+                    
+                filteredImages = images.Where(image => image.Type == coverType && image.Region != null && image.Region.Equals(LaunchBox.Region.UnitedStates, StringComparison.OrdinalIgnoreCase)).OrderByDescending(image => image.ID);
+                if (filteredImages.Any())
+                {
+                    return filteredImages.First();
+                }
+                        
+                filteredImages = images.Where(image => image.Type == coverType && string.IsNullOrWhiteSpace(image.Region)).OrderByDescending(image => image.ID);
+                if (filteredImages.Any())
+                {
+                    return filteredImages.First();
+                }
+            
+                filteredImages = images.Where(image => image.Type == coverType && image.Region != null && image.Region.Equals(LaunchBox.Region.World, StringComparison.OrdinalIgnoreCase)).OrderByDescending(image => image.ID);
+                if (filteredImages.Any())
+                {
+                    return filteredImages.First();
+                }
+                        
+                filteredImages = images.Where(image => image.Type == coverType && image.Region != null && image.Region.Equals(LaunchBox.Region.UnitedKingdom, StringComparison.OrdinalIgnoreCase)).OrderByDescending(image => image.ID);
+                if (filteredImages.Any())
+                {
+                    return filteredImages.First();
+                }
+                       
+                filteredImages = images.Where(image => image.Type == coverType && image.Region != null && image.Region.Equals(LaunchBox.Region.Europe, StringComparison.OrdinalIgnoreCase)).OrderByDescending(image => image.ID);
+                if (filteredImages.Any())
+                {
+                    return filteredImages.First();
+                }
+            }
+            return images.FirstOrDefault();
+        }
+
         private LaunchBox.Metadata.Game GetGame()
         {
             if (_game is null)
@@ -165,7 +225,7 @@ namespace LBGDBMetadata
             {
                 using (var context = new MetaDataContext())
                 {
-                    var coverImages = context.GameImages.FirstOrDefault(image => image.DatabaseID == game.DatabaseID && LaunchBox.Image.ImageType.Cover.Contains(image.Type));
+                    var coverImages = GetBestImage(context.GameImages.Where(image => image.DatabaseID == game.DatabaseID && LaunchBox.Image.ImageType.Cover.Contains(image.Type)).ToList());
                     if (coverImages != null)
                     {
                         return new MetadataFile("https://images.launchbox-app.com/" + coverImages.FileName);
@@ -184,12 +244,11 @@ namespace LBGDBMetadata
             {
                 using (var context = new MetaDataContext())
                 {
-                    var backgroundImages = context.GameImages.FirstOrDefault(image => image.DatabaseID == game.DatabaseID && LaunchBox.Image.ImageType.Background.Contains(image.Type));
+                    var backgroundImages = GetBestImage(context.GameImages.Where(image => image.DatabaseID == game.DatabaseID && LaunchBox.Image.ImageType.Background.Contains(image.Type)).ToList());
                     if (backgroundImages != null)
                     {
                         return new MetadataFile("https://images.launchbox-app.com/" + backgroundImages.FileName);
                     }
-
                 }
             }       
 

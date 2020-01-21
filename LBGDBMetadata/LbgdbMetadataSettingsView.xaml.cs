@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
+using Playnite.ViewModels;
+using Playnite.Windows;
 
 
 namespace LBGDBMetadata
@@ -11,6 +13,7 @@ namespace LBGDBMetadata
     public partial class LbgdbMetadataSettingsView : UserControl
     {
         private readonly LbgdbMetadataPlugin _plugin;
+        private ProgressViewViewModel _downloadProgress;
 
         public LbgdbMetadataSettingsView()
         {
@@ -26,15 +29,22 @@ namespace LBGDBMetadata
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
             btnRefresh.IsEnabled = false;
-           
-            try
-            {
-                var newMetadataHash = await _plugin.UpdateMetadata();
-            }
-            catch (Exception)
-            {
-                btnRefresh.IsEnabled = true;
-            }
+            
+            
+                _downloadProgress = new ProgressViewViewModel(new ProgressWindowFactory(),
+                    () =>
+                    {
+                        try
+                        {
+                            var result = _plugin.UpdateMetadata(_downloadProgress).Result;
+                        }
+                        catch (Exception)
+                        {
+                            btnRefresh.IsEnabled = true;
+                        }
+                    },"Downloading LaunchBox Metadata..." );
+                _downloadProgress.ActivateProgress();
+         
         }
 
         private async void UserControl_Loaded(object sender, RoutedEventArgs e)

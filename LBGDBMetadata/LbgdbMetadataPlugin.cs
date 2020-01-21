@@ -14,6 +14,7 @@ using LBGDBMetadata.LaunchBox.Metadata;
 using Microsoft.EntityFrameworkCore;
 using Playnite.SDK;
 using Playnite.SDK.Plugins;
+using Playnite.ViewModels;
 using Game = Playnite.SDK.Models.Game;
 
 namespace LBGDBMetadata
@@ -142,7 +143,7 @@ namespace LBGDBMetadata
             return true;
         }
 
-        public async Task<string> UpdateMetadata()
+        public async Task<string> UpdateMetadata(ProgressViewViewModel progress)
         {
             //string newMetadataHash = "";
             
@@ -158,26 +159,29 @@ namespace LBGDBMetadata
 
                     if (metaData != null)
                     {
-                        
+                        progress.ProgressText = "Updating database...";
                         using (var context = new MetaDataContext())
                         {
                             await context.Database.EnsureDeletedAsync();
                             await context.Database.MigrateAsync();
                         }
 
+                        progress.ProgressText = "Importing games...";
                         using (var metaDataStream = metaData.Open())
                         {
                             await ImportXml<LaunchBox.Metadata.Game>(metaDataStream);
                         }
 
-                        using (var metaDataStream = metaData.Open())
-                        {
-                            await ImportXml<GameImage>(metaDataStream);
-                        }
-
+                        progress.ProgressText = "Importing alternate game names...";
                         using (var metaDataStream = metaData.Open())
                         {
                             await ImportXml<GameAlternateName>(metaDataStream);
+                        }
+
+                        progress.ProgressText = "Importing media...";
+                        using (var metaDataStream = metaData.Open())
+                        {
+                            await ImportXml<GameImage>(metaDataStream);
                         }
                     }
                 }

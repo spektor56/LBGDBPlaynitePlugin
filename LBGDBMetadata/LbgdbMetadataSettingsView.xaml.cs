@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using Playnite.ViewModels;
@@ -26,7 +28,7 @@ namespace LBGDBMetadata
             InitializeComponent();
         }
 
-        private async void Button_Click(object sender, RoutedEventArgs e)
+        private void Button_Click(object sender, RoutedEventArgs e)
         {
             btnRefresh.IsEnabled = false;
             
@@ -50,7 +52,7 @@ namespace LBGDBMetadata
         private async void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
             //btnRefresh.IsEnabled = true;
-            btnRefresh.IsEnabled = await _plugin.NewMetadataAvailable();
+            btnRefresh.IsEnabled = !File.Exists(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "lbgdb.db")) || await _plugin.NewMetadataAvailable();
         }
     }
 }

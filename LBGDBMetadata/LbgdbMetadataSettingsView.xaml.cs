@@ -52,7 +52,7 @@ namespace LBGDBMetadata
         private async void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
             //btnRefresh.IsEnabled = true;
-            btnRefresh.IsEnabled = !File.Exists(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "lbgdb.db")) || await _plugin.NewMetadataAvailable();
+            btnRefresh.IsEnabled = !_plugin.HasData() || await _plugin.NewMetadataAvailable();
         }
     }
 }

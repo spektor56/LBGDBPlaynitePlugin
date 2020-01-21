@@ -143,6 +143,20 @@ namespace LBGDBMetadata
             return true;
         }
 
+        public bool HasData()
+        {
+            using (var metaDataContext = new MetaDataContext())
+            {
+                if (metaDataContext.Games.Any())
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+
         public async Task<string> UpdateMetadata(ProgressViewViewModel progress)
         {
             //string newMetadataHash = "";

@@ -3,14 +3,16 @@ using System;
 using LBGDBMetadata;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace LBGDBMetadata.Migrations
 {
     [DbContext(typeof(MetaDataContext))]
-    partial class MetaDataContextModelSnapshot : ModelSnapshot
+    [Migration("20200122165300_videos")]
+    partial class videos
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

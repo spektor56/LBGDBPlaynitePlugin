@@ -47,6 +47,9 @@ namespace LBGDBMetadata.LaunchBox.Metadata
         [XmlElement(ElementName = "Overview")]
         public string Overview { get; set; }
 
+        [XmlElement(ElementName = "VideoURL")]
+        public string VideoURL { get; set; }
+
         public string NameSearch { get; set; }
         public string PlatformSearch { get; set; }
 

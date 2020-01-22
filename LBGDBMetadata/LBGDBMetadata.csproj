@@ -25,10 +25,11 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>..\..\..\..\..\AppData\Local\Playnite\Extensions\LBGDBMetadata\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -86,6 +87,10 @@
     <Compile Include="Migrations\20200120043540_initialCreate.cs" />
     <Compile Include="Migrations\20200120043540_initialCreate.designer.cs">
       <DependentUpon>20200120043540_initialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\20200122165300_videos.cs" />
+    <Compile Include="Migrations\20200122165300_videos.designer.cs">
+      <DependentUpon>20200122165300_videos.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\MetaDataContextModelSnapshot.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

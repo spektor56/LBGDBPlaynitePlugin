@@ -262,10 +262,22 @@ namespace LBGDBMetadata
 
             if (game != null)
             {
+                var links = new List<Link>
+                {
+                    new Link("LaunchBox", "https://gamesdb.launchbox-app.com/games/dbid/" + game.DatabaseID)
+                };
+
                 if (!string.IsNullOrWhiteSpace(game.WikipediaURL))
                 {
-                    return new List<Link>() { new Link("Wikipedia", game.WikipediaURL) };
+                    links.Add(new Link("Wikipedia", game.WikipediaURL));
                 }
+
+                if (!string.IsNullOrWhiteSpace(game.VideoURL))
+                {
+                    links.Add(new Link("Video", game.VideoURL));
+                }
+
+                return links;
             }
 
             return base.GetLinks();

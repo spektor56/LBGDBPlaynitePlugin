@@ -5,8 +5,6 @@ VisualStudioVersion = 16.0.29503.13
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LBGDBMetadata", "LBGDBMetadata\LBGDBMetadata.csproj", "{F63EE793-300C-46B5-BF31-E9F71321FFB4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsFormsApp1", "WindowsFormsApp1\WindowsFormsApp1.csproj", "{2C101DE0-D105-4D2F-9FC4-4CA5970765E5}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,10 +15,6 @@ Global
 		{F63EE793-300C-46B5-BF31-E9F71321FFB4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F63EE793-300C-46B5-BF31-E9F71321FFB4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F63EE793-300C-46B5-BF31-E9F71321FFB4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2C101DE0-D105-4D2F-9FC4-4CA5970765E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2C101DE0-D105-4D2F-9FC4-4CA5970765E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2C101DE0-D105-4D2F-9FC4-4CA5970765E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2C101DE0-D105-4D2F-9FC4-4CA5970765E5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

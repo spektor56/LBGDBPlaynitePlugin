@@ -91,54 +91,52 @@ namespace LBGDBMetadata
             return !Settings.OldMetadataHash.Equals(newMetadataHash, StringComparison.OrdinalIgnoreCase);
         }
 
-        private async Task<bool> ImportXml<T>(Stream metaDataStream) where T : class
+        private async Task<bool> ImportXml<T>(Stream metaDataStream, int bufferSize = 10000) where T : class
         {
-            int bufferSize = 10000;
             var xElementList = metaDataStream.AsEnumerableXml(typeof(T).Name);
             XmlSerializer xmlSerializer = new XmlSerializer(typeof(T));
-            int i = 0;
-            var context = new MetaDataContext();
-
-            context.ChangeTracker.AutoDetectChangesEnabled = false;
-            var objectList = new List<T>(bufferSize);
-            foreach (var xElement in xElementList)
+            using (var context = new MetaDataContext())
             {
-                T deserializedObject;
-                using (var reader = xElement.CreateReader())
+                context.ChangeTracker.AutoDetectChangesEnabled = false;
+                var objectList = new List<T>(bufferSize);
+                foreach (var xElement in xElementList)
                 {
-                    deserializedObject = (T)xmlSerializer.Deserialize(reader);
+                    T deserializedObject;
+                    using (var reader = xElement.CreateReader())
+                    {
+                        deserializedObject = (T)xmlSerializer.Deserialize(reader);
+                    }
+
+                    switch (deserializedObject)
+                    {
+                        case LaunchBox.Metadata.Game game:
+                            game.NameSearch = game.Name.Sanitize();
+                            game.PlatformSearch = game.Platform.Sanitize();
+                            if (game.CommunityRating != null)
+                            {
+                                game.CommunityRating = Math.Round(((decimal)game.CommunityRating / 5) * 100, 0);
+                            }
+                            break;
+                        case GameAlternateName game:
+                            game.NameSearch = game.AlternateName.Sanitize();
+                            break;
+                    }
+
+                    objectList.Add(deserializedObject);
+
+                    if (objectList.Count >= bufferSize)
+                    {
+                        await context.BulkInsertAsync(objectList);
+                        objectList.Clear();
+                    }
+
                 }
 
-                switch (deserializedObject)
-                {
-                    case LaunchBox.Metadata.Game game:
-                        game.NameSearch = game.Name.Sanitize();
-                        game.PlatformSearch = game.Platform.Sanitize();
-                        if (game.CommunityRating != null)
-                        {
-                            game.CommunityRating = Math.Round(((decimal)game.CommunityRating / 5) * 100, 0);
-                        }
-                        break;
-                    case GameAlternateName game:
-                        game.NameSearch = game.AlternateName.Sanitize();
-                        break;
-                }
-
-                objectList.Add(deserializedObject);
-
-                if (++i >= bufferSize)
+                if (objectList.Count > 0)
                 {
                     await context.BulkInsertAsync(objectList);
-                    context.Dispose();
-                    i = 0;
-                    objectList = new List<T>(bufferSize);
-                    context = new MetaDataContext();
-                    context.ChangeTracker.AutoDetectChangesEnabled = false;
                 }
-                
             }
-
-            await context.BulkInsertAsync(objectList);
 
             return true;
         }
@@ -159,8 +157,6 @@ namespace LBGDBMetadata
 
         public async Task<string> UpdateMetadata(ProgressViewViewModel progress)
         {
-            //string newMetadataHash = "";
-            
             var newMetadataHash = await _lbgdbApi.GetMetadataHash();
             var zipFile = await _lbgdbApi.DownloadMetadata();
 

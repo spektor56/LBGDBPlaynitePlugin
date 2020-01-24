@@ -135,7 +135,7 @@ namespace LBGDBMetadata
             {
                 if (!string.IsNullOrWhiteSpace(game.Genres))
                 {
-                    return new List<string>() { game.Genres };
+                    return game.Genres.Split(';').Select(genre => genre.Trim()).ToList();
                 }
             }
 

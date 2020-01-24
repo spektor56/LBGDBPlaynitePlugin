@@ -165,7 +165,7 @@ namespace LBGDBMetadata
             {
                 if (!string.IsNullOrWhiteSpace(game.Developer))
                 {
-                    return new List<string>() { game.Developer };
+                    return game.Developer.Split(';').Select(developer => developer.Trim()).ToList();
                 }
             }
 
@@ -180,7 +180,7 @@ namespace LBGDBMetadata
             {
                 if (!string.IsNullOrWhiteSpace(game.Publisher))
                 {
-                    return new List<string>() { game.Publisher };
+                    return game.Publisher.Split(';').Select(publisher => publisher.Trim()).ToList();
                 }
             }
 

@@ -2,11 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Text.RegularExpressions;
 using LBGDBMetadata.Extensions;
 using LBGDBMetadata.LaunchBox.Metadata;
-using Microsoft.EntityFrameworkCore;
 using Playnite.SDK.Metadata;
 using Playnite.SDK.Models;
 using Playnite.SDK.Plugins;

@@ -17,7 +17,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\..\..\AppData\Local\Playnite\Extensions\LBGDBMetadata\</OutputPath>
+    <OutputPath>..\..\..\source\repos\spektor56\Playnite\source\Playnite.DesktopApp\bin\x86\Debug\Extensions\LBGDBMetadata\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>

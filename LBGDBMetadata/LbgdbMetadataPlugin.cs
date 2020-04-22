@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Net.Http;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Xml.Serialization;
@@ -22,9 +24,39 @@ namespace LBGDBMetadata
     {
         private readonly LbgdbApi _lbgdbApi;
         internal readonly LbgdbMetadataSettings Settings;
+        public HttpClient HttpClient { get; private set; } = new HttpClient();
+
+        private readonly HashSet<string> _assemblyRedirects = new HashSet<string>()
+        {
+            "Microsoft.Extensions.Caching.Abstractions",
+            "Microsoft.Extensions.Configuration.Abstractions",
+            "Microsoft.Extensions.DependencyInjection",
+            "Microsoft.Extensions.DependencyInjection.Abstractions",
+            "Microsoft.Extensions.Logging.Abstractions",
+            "Microsoft.Extensions.Options",
+            "Microsoft.Extensions.Primitives",
+            "Newtonsoft.Json",
+            "System.ComponentModel.Annotations",
+            "System.Memory",
+            "System.Numerics.Vectors",
+            "System.Runtime.CompilerServices.Unsafe"
+        };
 
         public LbgdbMetadataPlugin(IPlayniteAPI playniteAPI) : base(playniteAPI)
         {
+            /*
+            AppDomain.CurrentDomain.AssemblyResolve += (sender, args) =>
+            {
+                var requestedAssembly = new AssemblyName(args.Name);
+
+                if (_assemblyRedirects.Contains(requestedAssembly.Name))
+                {
+                    return Assembly.LoadFrom(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), requestedAssembly.Name) + ".dll");
+                }
+
+                return null;
+            };
+            */
             using (var metadataContext = new MetaDataContext())
             {
                 metadataContext.Database.Migrate();
@@ -245,7 +277,7 @@ namespace LBGDBMetadata
         public override Guid Id { get; } = Guid.Parse("000001D9-DBD1-46C6-B5D0-B1BA559D10E4");
         public override OnDemandMetadataProvider GetMetadataProvider(MetadataRequestOptions options)
         {
-            return new LbgdbLazyMetadataProvider(options, this);
+            return new LbgdbMetadataProvider(options, this);
         }
 
         public override string Name { get; } = "Launchbox";

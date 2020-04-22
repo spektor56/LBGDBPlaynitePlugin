@@ -45,10 +45,17 @@ namespace LBGDBMetadata
                     continue;
                 }
 
-                filteredImages = images.Where(image => image.Type == coverType && image.Region != null && image.Region.Equals(_options.GameData.Region.Name, StringComparison.OrdinalIgnoreCase)).OrderByDescending(image => image.ID);
-                if (filteredImages.Any())
+                if (_options.GameData.Region != null)
                 {
-                    return filteredImages.First();
+                    filteredImages = images
+                        .Where(image =>
+                            image.Type == coverType && image.Region != null &&
+                            image.Region.Equals(_options.GameData.Region.Name, StringComparison.OrdinalIgnoreCase))
+                        .OrderByDescending(image => image.ID);
+                    if (filteredImages.Any())
+                    {
+                        return filteredImages.First();
+                    }
                 }
 
                 filteredImages = images.Where(image => image.Type == coverType && image.Region != null && image.Region.Equals(LaunchBox.Region.Canada, StringComparison.OrdinalIgnoreCase)).OrderByDescending(image => image.ID);

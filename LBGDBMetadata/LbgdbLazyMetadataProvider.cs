@@ -46,6 +46,19 @@ namespace LBGDBMetadata
                     continue;
                 }
 
+                if (options.GameData.Region != null)
+                {
+                    filteredImages = images
+                        .Where(image =>
+                            image.Type == coverType && image.Region != null &&
+                            image.Region.Equals(options.GameData.Region.Name, StringComparison.OrdinalIgnoreCase))
+                        .OrderByDescending(image => image.ID);
+                    if (filteredImages.Any())
+                    {
+                        return filteredImages.First();
+                    }
+                }
+
                 filteredImages = images.Where(image => image.Type == coverType && image.Region != null && image.Region.Equals(LaunchBox.Region.Canada, StringComparison.OrdinalIgnoreCase)).OrderByDescending(image => image.ID);
                 if (filteredImages.Any())
                 {
@@ -290,11 +303,14 @@ namespace LBGDBMetadata
 
         public override MetadataFile GetIcon()
         {
+            /*
             using (MemoryStream ms = new MemoryStream())
             {
                 LBGDBMetadata.Properties.Resources.launchbox.Save(ms);
                 return new MetadataFile("LaunchBox", ms.ToArray());
             }
+            */
+            return base.GetIcon();
         }
 
         public override int? GetCriticScore()

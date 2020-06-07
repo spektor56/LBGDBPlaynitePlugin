@@ -2,6 +2,7 @@
 {
     public static class Region
     {
+        public const string None = "";
         public const string Asia = "Asia";
         public const string Australia = "Australia";
         public const string Brazil = "Brazil";

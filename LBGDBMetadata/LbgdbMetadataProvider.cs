@@ -37,68 +37,42 @@ namespace LBGDBMetadata
             {
                 return null;
             }
-            IOrderedEnumerable<GameImage> filteredImages;
+
+            var imagePriority = new Dictionary<string, int>
+            {
+                {LaunchBox.Region.Canada, 2},
+                {LaunchBox.Region.NorthAmerica, 3},
+                {LaunchBox.Region.UnitedStates, 4},
+                {LaunchBox.Region.None, 5},
+                {LaunchBox.Region.World, 6},
+                {LaunchBox.Region.UnitedKingdom, 7},
+                {LaunchBox.Region.Europe, 8}
+            };
+
+            if (_options.GameData.Region != null)
+            {
+                imagePriority.Add(_options.GameData.Region.Name, 1);
+
+            }
+
             foreach (var coverType in imageTypes)
             {
                 if (images.All(image => image.Type != coverType))
                 {
                     continue;
                 }
-
-                if (_options.GameData.Region != null)
-                {
-                    filteredImages = images
-                        .Where(image =>
-                            image.Type == coverType && image.Region != null &&
-                            image.Region.Equals(_options.GameData.Region.Name, StringComparison.OrdinalIgnoreCase))
-                        .OrderByDescending(image => image.ID);
-                    if (filteredImages.Any())
+                                
+                return images
+                    .Where(image => image.Type == coverType)
+                    .OrderBy((n) =>
                     {
-                        return filteredImages.First();
-                    }
-                }
+                        if (imagePriority.ContainsKey(n.Region))
+                        {
+                            return imagePriority[n.Region];
+                        }
 
-                filteredImages = images.Where(image => image.Type == coverType && image.Region != null && image.Region.Equals(LaunchBox.Region.Canada, StringComparison.OrdinalIgnoreCase)).OrderByDescending(image => image.ID);
-                if (filteredImages.Any())
-                {
-                    return filteredImages.First();
-                }
-             
-                filteredImages = images.Where(image => image.Type == coverType && image.Region != null && image.Region.Equals(LaunchBox.Region.NorthAmerica, StringComparison.OrdinalIgnoreCase)).OrderByDescending(image => image.ID);
-                if (filteredImages.Any())
-                {
-                    return filteredImages.First();
-                }
-                    
-                filteredImages = images.Where(image => image.Type == coverType && image.Region != null && image.Region.Equals(LaunchBox.Region.UnitedStates, StringComparison.OrdinalIgnoreCase)).OrderByDescending(image => image.ID);
-                if (filteredImages.Any())
-                {
-                    return filteredImages.First();
-                }
-                        
-                filteredImages = images.Where(image => image.Type == coverType && string.IsNullOrWhiteSpace(image.Region)).OrderByDescending(image => image.ID);
-                if (filteredImages.Any())
-                {
-                    return filteredImages.First();
-                }
-            
-                filteredImages = images.Where(image => image.Type == coverType && image.Region != null && image.Region.Equals(LaunchBox.Region.World, StringComparison.OrdinalIgnoreCase)).OrderByDescending(image => image.ID);
-                if (filteredImages.Any())
-                {
-                    return filteredImages.First();
-                }
-                        
-                filteredImages = images.Where(image => image.Type == coverType && image.Region != null && image.Region.Equals(LaunchBox.Region.UnitedKingdom, StringComparison.OrdinalIgnoreCase)).OrderByDescending(image => image.ID);
-                if (filteredImages.Any())
-                {
-                    return filteredImages.First();
-                }
-                       
-                filteredImages = images.Where(image => image.Type == coverType && image.Region != null && image.Region.Equals(LaunchBox.Region.Europe, StringComparison.OrdinalIgnoreCase)).OrderByDescending(image => image.ID);
-                if (filteredImages.Any())
-                {
-                    return filteredImages.First();
-                }
+                        return int.MaxValue;
+                    }).FirstOrDefault();
             }
             return images.FirstOrDefault();
         }

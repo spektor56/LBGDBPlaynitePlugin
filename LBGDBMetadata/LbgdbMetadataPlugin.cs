@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -13,6 +14,7 @@ using LBGDBMetadata.Extensions;
 using LBGDBMetadata.LaunchBox.Api;
 using LBGDBMetadata.LaunchBox.Metadata;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Protocols;
 using Playnite.SDK;
 using Playnite.SDK.Plugins;
 using Playnite.ViewModels;
@@ -44,7 +46,6 @@ namespace LBGDBMetadata
 
         public LbgdbMetadataPlugin(IPlayniteAPI playniteAPI) : base(playniteAPI)
         {
-            /*
             AppDomain.CurrentDomain.AssemblyResolve += (sender, args) =>
             {
                 var requestedAssembly = new AssemblyName(args.Name);
@@ -56,7 +57,7 @@ namespace LBGDBMetadata
 
                 return null;
             };
-            */
+            
             using (var metadataContext = new MetaDataContext())
             {
                 metadataContext.Database.Migrate();

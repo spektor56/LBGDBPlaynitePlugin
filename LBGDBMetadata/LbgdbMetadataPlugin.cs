@@ -261,12 +261,11 @@ namespace LBGDBMetadata
             MetadataField.ReleaseDate,
             MetadataField.Developers,
             MetadataField.Publishers,
-            //MetadataField.Tags,
             MetadataField.Description,
             MetadataField.Links,
             MetadataField.CriticScore,
             MetadataField.CommunityScore,
-            //MetadataField.Icon,
+            MetadataField.Icon,
             MetadataField.CoverImage,
             MetadataField.BackgroundImage
 

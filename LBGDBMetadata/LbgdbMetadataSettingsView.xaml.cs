@@ -30,21 +30,21 @@ namespace LBGDBMetadata
         {
             btnRefresh.IsEnabled = false;
             
-            
-                _downloadProgress = new ProgressViewViewModel(new ProgressWindowFactory(),
-                    () =>
+
+            _downloadProgress = new ProgressViewViewModel(new ProgressWindowFactory(),
+                () =>
+                {
+                    try
                     {
-                        try
-                        {
-                            var result = _plugin.UpdateMetadata(_downloadProgress).Result;
-                        }
-                        catch (Exception)
-                        {
-                            btnRefresh.IsEnabled = true;
-                        }
-                    },"Downloading LaunchBox Metadata..." );
-                _downloadProgress.ActivateProgress();
-         
+                        var result = _plugin.UpdateMetadata(_downloadProgress).Result;
+                    }
+                    catch (Exception)
+                    {
+                        btnRefresh.IsEnabled = true;
+                    }
+                },"Downloading LaunchBox Metadata..." );
+            _downloadProgress.ActivateProgress();
+
         }
 
         private async void UserControl_Loaded(object sender, RoutedEventArgs e)

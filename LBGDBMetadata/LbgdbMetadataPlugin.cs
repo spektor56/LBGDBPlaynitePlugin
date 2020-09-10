@@ -28,78 +28,8 @@ namespace LBGDBMetadata
         internal readonly LbgdbMetadataSettings Settings;
         public HttpClient HttpClient { get; private set; } = new HttpClient();
 
-        private readonly HashSet<string> _assemblyRedirects = new HashSet<string>()
-        {
-            "System.Memory",
-            "System.Runtime.InteropServices.RuntimeInformation",
-            "System.Collections.Concurrent",
-            "System.Collections",
-            "System.ComponentModel",
-            "System.ComponentModel.EventBasedAsync",
-            "System.Data.Common",
-            "System.Diagnostics.Contracts",
-            "System.Diagnostics.Debug",
-            "System.Diagnostics.StackTrace",
-            "System.Diagnostics.Tools",
-            "System.Diagnostics.Tracing",
-            "System.Dynamic.Runtime",
-            "System.Globalization",
-            "System.Globalization.Extensions",
-            "System.IO.Compression",
-            "System.IO",
-            "System.Linq",
-            "System.Linq.Expressions",
-            "System.Linq.Parallel",
-            "System.Linq.Queryable",
-            "System.Net.Http",
-            "System.Net.NetworkInformation",
-            "System.Net.Primitives",
-            "System.Net.Requests",
-            "System.Net.Sockets",
-            "System.ObjectModel",
-            "System.Reflection",
-            "System.Reflection.Extensions",
-            "System.Reflection.Primitives",
-            "System.Resources.ResourceManager",
-            "System.Runtime",
-            "System.Runtime.Extensions",
-            "System.Runtime.InteropServices",
-            "System.Runtime.Numerics",
-            "System.Runtime.Serialization.Json",
-            "System.Runtime.Serialization.Primitives",
-            "System.Runtime.Serialization.Xml",
-            "System.Security.Cryptography.Algorithms",
-            "System.Security.Principal",
-            "System.Security.SecureString",
-            "System.Text.Encoding",
-            "System.Text.Encoding.Extensions",
-            "System.Text.RegularExpressions",
-            "System.Threading",
-            "System.Threading.Overlapped",
-            "System.Threading.Tasks",
-            "System.Threading.Tasks.Parallel",
-            "System.Threading.Timer",
-            "System.ValueTuple",
-            "System.Xml.ReaderWriter",
-            "System.Xml.XDocument",
-            "System.Xml.XmlSerializer",
-            "System.Xml.XPath.XDocument"
-        };
-
         public LbgdbMetadataPlugin(IPlayniteAPI playniteAPI) : base(playniteAPI)
         {
-            AppDomain.CurrentDomain.AssemblyResolve += (sender, args) =>
-            {
-                var requestedAssembly = new AssemblyName(args.Name);
-
-                if (_assemblyRedirects.Contains(requestedAssembly.Name))
-                {
-                    return Assembly.LoadFrom(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), requestedAssembly.Name) + ".dll");
-                }
-
-                return null;
-            };
-            
             using (var metadataContext = new MetaDataContext())
             {
                 metadataContext.Database.Migrate();

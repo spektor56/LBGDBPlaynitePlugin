@@ -80,7 +80,7 @@ namespace LBGDBMetadata
                 using (var context = new MetaDataContext())
                 {
                     var gameSearchName = _options.GameData.Name.Sanitize();
-                    var platformSearchName = "Nintendo Entertainment System".Sanitize();
+                    var platformSearchName = _options.GameData.Platform.Name.Sanitize();
                     _game = context.Games.FirstOrDefault(game => game.PlatformSearch == platformSearchName && (game.NameSearch == gameSearchName || game.AlternateNames.Any(alternateName => alternateName.NameSearch == gameSearchName)));
                     return _game;
                 }

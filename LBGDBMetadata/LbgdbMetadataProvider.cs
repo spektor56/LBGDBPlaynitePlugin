@@ -7,29 +7,24 @@ using LBGDBMetadata.LaunchBox.Metadata;
 using Playnite.SDK.Metadata;
 using Playnite.SDK.Models;
 using Playnite.SDK.Plugins;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats.Png;
+using SixLabors.ImageSharp.Processing;
 
 namespace LBGDBMetadata
 {
-    public class LbgdbLazyMetadataProvider : OnDemandMetadataProvider
+    public class LbgdbMetadataProvider : OnDemandMetadataProvider
     {
-        private readonly MetadataRequestOptions options;
-        private readonly LbgdbMetadataPlugin plugin;
-        private readonly ulong gameId = 0;
+        private readonly MetadataRequestOptions _options;
+        private readonly LbgdbMetadataPlugin _plugin;
         private LaunchBox.Metadata.Game _game;
-        private List<MetadataField> availableFields;
 
-        public LbgdbLazyMetadataProvider(MetadataRequestOptions options, LbgdbMetadataPlugin plugin)
+        public LbgdbMetadataProvider(MetadataRequestOptions options, LbgdbMetadataPlugin plugin)
         {
             //Game object is in the options class
             //This class will search for the game once (name + platform), then use gameid on subsequent lookups to load each metadata field.
-            this.options = options;
-            this.plugin = plugin;
-        }
-
-        public LbgdbLazyMetadataProvider(ulong gameId, LbgdbMetadataPlugin plugin)
-        {
-            this.gameId = gameId;
-            this.plugin = plugin;
+            _options = options;
+            _plugin = plugin;
         }
 
         private GameImage GetBestImage(List<GameImage> images, HashSet<string> imageTypes)
@@ -38,68 +33,42 @@ namespace LBGDBMetadata
             {
                 return null;
             }
-            IOrderedEnumerable<GameImage> filteredImages;
+
+            var imagePriority = new Dictionary<string, int>
+            {
+                {LaunchBox.Region.Canada, 2},
+                {LaunchBox.Region.NorthAmerica, 3},
+                {LaunchBox.Region.UnitedStates, 4},
+                {LaunchBox.Region.None, 5},
+                {LaunchBox.Region.World, 6},
+                {LaunchBox.Region.UnitedKingdom, 7},
+                {LaunchBox.Region.Europe, 8}
+            };
+
+            if (_options.GameData.Region != null)
+            {
+                imagePriority.Add(_options.GameData.Region.Name, 1);
+
+            }
+
             foreach (var coverType in imageTypes)
             {
                 if (images.All(image => image.Type != coverType))
                 {
                     continue;
                 }
-
-                if (options.GameData.Region != null)
-                {
-                    filteredImages = images
-                        .Where(image =>
-                            image.Type == coverType && image.Region != null &&
-                            image.Region.Equals(options.GameData.Region.Name, StringComparison.OrdinalIgnoreCase))
-                        .OrderByDescending(image => image.ID);
-                    if (filteredImages.Any())
+                                
+                return images
+                    .Where(image => image.Type == coverType)
+                    .OrderBy((n) =>
                     {
-                        return filteredImages.First();
-                    }
-                }
+                        if (imagePriority.ContainsKey(n.Region))
+                        {
+                            return imagePriority[n.Region];
+                        }
 
-                filteredImages = images.Where(image => image.Type == coverType && image.Region != null && image.Region.Equals(LaunchBox.Region.Canada, StringComparison.OrdinalIgnoreCase)).OrderByDescending(image => image.ID);
-                if (filteredImages.Any())
-                {
-                    return filteredImages.First();
-                }
-             
-                filteredImages = images.Where(image => image.Type == coverType && image.Region != null && image.Region.Equals(LaunchBox.Region.NorthAmerica, StringComparison.OrdinalIgnoreCase)).OrderByDescending(image => image.ID);
-                if (filteredImages.Any())
-                {
-                    return filteredImages.First();
-                }
-                    
-                filteredImages = images.Where(image => image.Type == coverType && image.Region != null && image.Region.Equals(LaunchBox.Region.UnitedStates, StringComparison.OrdinalIgnoreCase)).OrderByDescending(image => image.ID);
-                if (filteredImages.Any())
-                {
-                    return filteredImages.First();
-                }
-                        
-                filteredImages = images.Where(image => image.Type == coverType && string.IsNullOrWhiteSpace(image.Region)).OrderByDescending(image => image.ID);
-                if (filteredImages.Any())
-                {
-                    return filteredImages.First();
-                }
-            
-                filteredImages = images.Where(image => image.Type == coverType && image.Region != null && image.Region.Equals(LaunchBox.Region.World, StringComparison.OrdinalIgnoreCase)).OrderByDescending(image => image.ID);
-                if (filteredImages.Any())
-                {
-                    return filteredImages.First();
-                }
-                        
-                filteredImages = images.Where(image => image.Type == coverType && image.Region != null && image.Region.Equals(LaunchBox.Region.UnitedKingdom, StringComparison.OrdinalIgnoreCase)).OrderByDescending(image => image.ID);
-                if (filteredImages.Any())
-                {
-                    return filteredImages.First();
-                }
-                       
-                filteredImages = images.Where(image => image.Type == coverType && image.Region != null && image.Region.Equals(LaunchBox.Region.Europe, StringComparison.OrdinalIgnoreCase)).OrderByDescending(image => image.ID);
-                if (filteredImages.Any())
-                {
-                    return filteredImages.First();
-                }
+                        return int.MaxValue;
+                    }).FirstOrDefault();
             }
             return images.FirstOrDefault();
         }
@@ -110,8 +79,8 @@ namespace LBGDBMetadata
             {
                 using (var context = new MetaDataContext())
                 {
-                    var gameSearchName = options.GameData.Name.Sanitize();
-                    var platformSearchName = options.GameData.Platform.Name.Sanitize();
+                    var gameSearchName = _options.GameData.Name.Sanitize();
+                    var platformSearchName = _options.GameData.Platform.Name.Sanitize();
                     _game = context.Games.FirstOrDefault(game => game.PlatformSearch == platformSearchName && (game.NameSearch == gameSearchName || game.AlternateNames.Any(alternateName => alternateName.NameSearch == gameSearchName)));
                     return _game;
                 }
@@ -297,19 +266,49 @@ namespace LBGDBMetadata
         {
             get
             {
-                return plugin.SupportedFields;
+                return _plugin.SupportedFields;
             }
         }
 
         public override MetadataFile GetIcon()
         {
-            /*
-            using (MemoryStream ms = new MemoryStream())
+            var game = GetGame();
+
+            if (game != null)
             {
-                LBGDBMetadata.Properties.Resources.launchbox.Save(ms);
-                return new MetadataFile("LaunchBox", ms.ToArray());
+                using (var context = new MetaDataContext())
+                {
+                    var icon =
+                        GetBestImage(
+                            context.GameImages.Where(image =>
+                                image.DatabaseID == game.DatabaseID &&
+                                LaunchBox.Image.ImageType.Icon.Contains(image.Type)).ToList(),
+                            LaunchBox.Image.ImageType.Icon);
+                    if (icon != null)
+                    {
+                        var imageData = _plugin.HttpClient.GetByteArrayAsync("https://images.launchbox-app.com/" + icon.FileName).Result;
+
+                        using (Image image = Image.Load(imageData))
+                        {
+                            image.Mutate(x =>
+                            {
+                                x.Resize(new ResizeOptions
+                                {
+                                    Size = new Size(256, 256),
+                                    Mode = ResizeMode.Pad
+                                });
+                            });
+
+                            using (MemoryStream ms = new MemoryStream())
+                            {
+                                image.Save(ms, new PngEncoder());
+                                return new MetadataFile(icon.FileName, ms.ToArray(), "https://images.launchbox-app.com/" + icon.FileName);
+                            }
+                        }
+                    }
+                }
             }
-            */
+
             return base.GetIcon();
         }
 

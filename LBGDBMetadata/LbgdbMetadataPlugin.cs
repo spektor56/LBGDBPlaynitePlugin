@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Net.Http;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Xml.Serialization;
@@ -11,6 +14,7 @@ using LBGDBMetadata.Extensions;
 using LBGDBMetadata.LaunchBox.Api;
 using LBGDBMetadata.LaunchBox.Metadata;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Protocols;
 using Playnite.SDK;
 using Playnite.SDK.Plugins;
 using Playnite.ViewModels;
@@ -22,6 +26,7 @@ namespace LBGDBMetadata
     {
         private readonly LbgdbApi _lbgdbApi;
         internal readonly LbgdbMetadataSettings Settings;
+        public HttpClient HttpClient { get; private set; } = new HttpClient();
 
         public LbgdbMetadataPlugin(IPlayniteAPI playniteAPI) : base(playniteAPI)
         {
@@ -245,7 +250,7 @@ namespace LBGDBMetadata
         public override Guid Id { get; } = Guid.Parse("000001D9-DBD1-46C6-B5D0-B1BA559D10E4");
         public override OnDemandMetadataProvider GetMetadataProvider(MetadataRequestOptions options)
         {
-            return new LbgdbLazyMetadataProvider(options, this);
+            return new LbgdbMetadataProvider(options, this);
         }
 
         public override string Name { get; } = "Launchbox";

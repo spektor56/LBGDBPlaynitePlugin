@@ -45,10 +45,9 @@ namespace LBGDBMetadata
                 {LaunchBox.Region.Europe, 8}
             };
 
-            if (_options.GameData.Region != null)
+            if (_options.GameData.Region != null && !string.IsNullOrWhiteSpace(_options.GameData.Region.Name))
             {
                 imagePriority.Add(_options.GameData.Region.Name, 1);
-
             }
 
             foreach (var coverType in imageTypes)
@@ -62,9 +61,9 @@ namespace LBGDBMetadata
                     .Where(image => image.Type == coverType)
                     .OrderBy((n) =>
                     {
-                        if (imagePriority.ContainsKey(n.Region))
+                        if (imagePriority.ContainsKey(n.Region ?? ""))
                         {
-                            return imagePriority[n.Region];
+                            return imagePriority[n.Region ?? ""];
                         }
 
                         return int.MaxValue;

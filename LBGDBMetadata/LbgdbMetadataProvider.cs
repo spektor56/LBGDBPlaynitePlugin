@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using LBGDBMetadata.Extensions;
 using LBGDBMetadata.LaunchBox.Metadata;
+using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 using Playnite.SDK.Metadata;
 using Playnite.SDK.Models;
 using Playnite.SDK.Plugins;
@@ -25,6 +26,18 @@ namespace LBGDBMetadata
             //This class will search for the game once (name + platform), then use gameid on subsequent lookups to load each metadata field.
             _options = options;
             _plugin = plugin;
+        }
+
+        private int GetWeightedRating(double communityRatingCount, double communityRating )
+        {
+            double positiveVotes = Math.Floor((communityRating / 100) * communityRatingCount);
+            double negativeVotes = communityRatingCount - positiveVotes;
+
+            double totalVotes = positiveVotes + negativeVotes;
+            double average = totalVotes < 1 ? 0 : positiveVotes / totalVotes;
+            double score = average - (average - 0.5) * Math.Pow(2, -Math.Log10(totalVotes + 1));
+            
+            return (int)(score * 100);
         }
 
         private GameImage GetBestImage(List<GameImage> images, HashSet<string> imageTypes)
@@ -187,9 +200,9 @@ namespace LBGDBMetadata
 
             if (game != null)
             {
-                if (game.CommunityRating != null)
+                if (game.CommunityRating != null && game.CommunityRatingCount > 0)
                 {
-                    return (int)game.CommunityRating;
+                    return GetWeightedRating(game.CommunityRatingCount, (double)game.CommunityRating);
                 }
             }
 

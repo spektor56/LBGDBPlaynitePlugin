@@ -60,7 +60,14 @@ namespace LBGDBMetadata
 
             if (_options.GameData.Region != null && !string.IsNullOrWhiteSpace(_options.GameData.Region.Name))
             {
-                imagePriority.Add(_options.GameData.Region.Name, 1);
+                if (imagePriority.ContainsKey(_options.GameData.Region.Name))
+                {
+                    imagePriority[_options.GameData.Region.Name] = 1;
+                }
+                else
+                {
+                    imagePriority.Add(_options.GameData.Region.Name, 1);
+                }
             }
 
             foreach (var coverType in imageTypes)

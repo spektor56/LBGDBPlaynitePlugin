@@ -30,7 +30,7 @@ namespace LBGDBMetadata
 
         public LbgdbMetadataPlugin(IPlayniteAPI playniteAPI) : base(playniteAPI)
         {
-            using (var metadataContext = new MetaDataContext())
+            using (var metadataContext = new MetaDataContext(GetPluginUserDataPath()))
             {
                 metadataContext.Database.Migrate();
             }
@@ -99,7 +99,7 @@ namespace LBGDBMetadata
         {
             var xElementList = metaDataStream.AsEnumerableXml(typeof(T).Name);
             XmlSerializer xmlSerializer = new XmlSerializer(typeof(T));
-            using (var context = new MetaDataContext())
+            using (var context = new MetaDataContext(GetPluginUserDataPath()))
             {
                 context.ChangeTracker.AutoDetectChangesEnabled = false;
                 var objectList = new List<T>(bufferSize);
@@ -147,7 +147,7 @@ namespace LBGDBMetadata
 
         public bool HasData()
         {
-            using (var metaDataContext = new MetaDataContext())
+            using (var metaDataContext = new MetaDataContext(GetPluginUserDataPath()))
             {
                 if (metaDataContext.Games.Any())
                 {
@@ -174,7 +174,7 @@ namespace LBGDBMetadata
                     if (metaData != null)
                     {
                         progress.ProgressText = "Updating database...";
-                        using (var context = new MetaDataContext())
+                        using (var context = new MetaDataContext(GetPluginUserDataPath()))
                         {
                             await context.Database.EnsureDeletedAsync();
                             await context.Database.MigrateAsync();
@@ -221,7 +221,7 @@ namespace LBGDBMetadata
                         var xmlSerializer = new XmlSerializer(typeof(LaunchBox.Metadata.Game));
 
                         var i = 0;
-                        var context = new MetaDataContext();
+                        var context = new MetaDataContext(GetPluginUserDataPath());
                         context.ChangeTracker.AutoDetectChangesEnabled = false;
 
                         foreach (var xElement in games)
@@ -234,7 +234,7 @@ namespace LBGDBMetadata
                                 context.SaveChanges();
                                 i = 0;
                                 context.Dispose();
-                                context = new MetaDataContext();
+                                context = new MetaDataContext(GetPluginUserDataPath());
                                 context.ChangeTracker.AutoDetectChangesEnabled = false;
                             }
 

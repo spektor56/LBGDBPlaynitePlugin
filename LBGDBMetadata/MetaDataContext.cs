@@ -7,11 +7,17 @@ namespace LBGDBMetadata
 {
     public class MetaDataContext : DbContext
     {
+        public MetaDataContext(string path) : base()
+        {
+            PluginUserDataPath = path;
+        }
+
+        public string PluginUserDataPath { get; set; }
         public DbSet<Game> Games { get; set; }
         public DbSet<GameImage> GameImages { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder options)
             => options.UseSqlite(
-                $@"Data Source={Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "lbgdb.db")}");
+                $@"Data Source={Path.Combine(PluginUserDataPath ?? Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "lbgdb.db")}");
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

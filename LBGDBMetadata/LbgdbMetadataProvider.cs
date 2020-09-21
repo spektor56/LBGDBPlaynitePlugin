@@ -94,7 +94,7 @@ namespace LBGDBMetadata
                 var gameSearchName = "";
                 if (!string.IsNullOrWhiteSpace(_options?.GameData?.Name))
                 {
-                    _options.GameData.Name.Sanitize();
+                    gameSearchName = _options.GameData.Name.Sanitize();
                 }
 
                 using (var context = new MetaDataContext(_plugin.GetPluginUserDataPath()))

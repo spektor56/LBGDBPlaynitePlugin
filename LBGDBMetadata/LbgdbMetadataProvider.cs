@@ -87,7 +87,7 @@ namespace LBGDBMetadata
                 {
                     var sanitizedPlatform = _options.GameData.Platform.Name.Sanitize();
                     platformSearchName = _plugin.PlatformTranslationTable.ContainsKey(sanitizedPlatform)
-                        ? _plugin.PlatformTranslationTable[_options.GameData.Platform.Name]
+                        ? _plugin.PlatformTranslationTable[sanitizedPlatform]
                         : sanitizedPlatform;
                 }
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using LBGDBMetadata.Extensions;
 using LBGDBMetadata.LaunchBox;
 using LBGDBMetadata.LaunchBox.Metadata;
@@ -25,8 +26,8 @@ namespace LBGDBMetadata
         {
             _options = options;
             _plugin = plugin;
-            
-            if (_options != null && _options.GameData != null && _options.GameData.Region != null)
+
+            if (_options?.GameData?.Region != null)
             {
                 _regionPriority = _options.GameData.Region.Name.GetRegionPriority();
             }
@@ -81,10 +82,23 @@ namespace LBGDBMetadata
         {
             if (_game is null)
             {
+                var platformSearchName = "";
+                if (!string.IsNullOrWhiteSpace(_options?.GameData?.Platform?.Name))
+                {
+                    var sanitizedPlatform = _options.GameData.Platform.Name.Sanitize();
+                    platformSearchName = _plugin.PlatformTranslationTable.ContainsKey(sanitizedPlatform)
+                        ? _plugin.PlatformTranslationTable[_options.GameData.Platform.Name]
+                        : sanitizedPlatform;
+                }
+
+                var gameSearchName = "";
+                if (!string.IsNullOrWhiteSpace(_options?.GameData?.Name))
+                {
+                    _options.GameData.Name.Sanitize();
+                }
+
                 using (var context = new MetaDataContext(_plugin.GetPluginUserDataPath()))
                 {
-                    var gameSearchName = _options.GameData.Name.Sanitize();
-                    var platformSearchName = _options.GameData.Platform.Name.Sanitize();
                     _game = context.Games.FirstOrDefault(game => game.PlatformSearch == platformSearchName && (game.NameSearch == gameSearchName || game.AlternateNames.Any(alternateName => alternateName.NameSearch == gameSearchName)));
                     return _game;
                 }
@@ -118,7 +132,7 @@ namespace LBGDBMetadata
             {
                 if (!string.IsNullOrWhiteSpace(game.Genres))
                 {
-                    return game.Genres.Split(';').Select(genre => genre.Trim()).ToList();
+                    return game.Genres.Split(';').Select(genre => genre.Trim()).OrderBy(genre => genre.Trim()).ToList();
                 }
             }
 
@@ -129,12 +143,9 @@ namespace LBGDBMetadata
         {
             var game = GetGame();
 
-            if (game != null)
+            if (game?.ReleaseDate != null)
             {
-                if (game.ReleaseDate != null)
-                {
-                    return game.ReleaseDate;
-                }
+                return game.ReleaseDate;
             }
 
             return base.GetReleaseDate();
@@ -148,7 +159,7 @@ namespace LBGDBMetadata
             {
                 if (!string.IsNullOrWhiteSpace(game.Developer))
                 {
-                    return game.Developer.Split(';').Select(developer => developer.Trim()).ToList();
+                    return game.Developer.Split(';').Select(developer => developer.Trim()).OrderBy(developer => developer.Trim()).ToList();
                 }
             }
 
@@ -163,7 +174,7 @@ namespace LBGDBMetadata
             {
                 if (!string.IsNullOrWhiteSpace(game.Publisher))
                 {
-                    return game.Publisher.Split(';').Select(publisher => publisher.Trim()).ToList();
+                    return game.Publisher.Split(';').Select(publisher => publisher.Trim()).OrderBy(publisher => publisher.Trim()).ToList();
                 }
             }
 

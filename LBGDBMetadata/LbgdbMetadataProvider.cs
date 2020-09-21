@@ -82,31 +82,36 @@ namespace LBGDBMetadata
         {
             if (_game is null)
             {
-                var platformSearchName = "";
-                if (!string.IsNullOrWhiteSpace(_options?.GameData?.Platform?.Name))
-                {
-                    var sanitizedPlatform = _options.GameData.Platform.Name.Sanitize();
-                    platformSearchName = _plugin.PlatformTranslationTable.ContainsKey(sanitizedPlatform)
-                        ? _plugin.PlatformTranslationTable[sanitizedPlatform]
-                        : sanitizedPlatform;
-                }
-
                 var gameSearchName = "";
                 if (!string.IsNullOrWhiteSpace(_options?.GameData?.Name))
                 {
                     gameSearchName = _options.GameData.Name.Sanitize();
                 }
 
-                using (var context = new MetaDataContext(_plugin.GetPluginUserDataPath()))
+                if (!string.IsNullOrWhiteSpace(gameSearchName))
                 {
-                    _game = context.Games.FirstOrDefault(game => game.PlatformSearch == platformSearchName && (game.NameSearch == gameSearchName || game.AlternateNames.Any(alternateName => alternateName.NameSearch == gameSearchName)));
-                    return _game;
+                    var platformSearchName = "";
+                    if (!string.IsNullOrWhiteSpace(_options?.GameData?.Platform?.Name))
+                    {
+                        var sanitizedPlatform = _options.GameData.Platform.Name.Sanitize();
+                        platformSearchName = _plugin.PlatformTranslationTable.ContainsKey(sanitizedPlatform)
+                            ? _plugin.PlatformTranslationTable[sanitizedPlatform]
+                            : sanitizedPlatform;
+                    }
+
+                    using (var context = new MetaDataContext(_plugin.GetPluginUserDataPath()))
+                    {
+                        _game = context.Games.FirstOrDefault(game =>
+                            game.PlatformSearch == platformSearchName && (game.NameSearch == gameSearchName ||
+                                                                          game.AlternateNames.Any(alternateName =>
+                                                                              alternateName.NameSearch ==
+                                                                              gameSearchName)));
+                        return _game;
+                    }
                 }
             }
-            else
-            {
-                return _game;
-            }
+            
+            return _game;
         }
 
         public override string GetName()

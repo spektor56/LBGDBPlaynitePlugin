@@ -4,6 +4,9 @@ namespace LBGDBMetadata.Extensions
 {
     public static class StringExtensions
     {
+
+        private static readonly Regex SanitizeRegex = new Regex(@"((^the\s+)|([^A-Za-z\s]+\s*the(?![A-Za-z])))|((^an\s+)|([^A-Za-z\s]+\s*an(?![A-Za-z])))|((^a\s+)|([^A-Za-z\s]+\s*a(?![A-Za-z])))|[^A-Za-z0-9]", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+
         public static string Sanitize(this string text)
         {
             /*
@@ -15,8 +18,7 @@ namespace LBGDBMetadata.Extensions
             text = Regex.Replace(text, @"(^|\s+){1}VII($|\s+){1}", "7", RegexOptions.IgnoreCase);
             text = Regex.Replace(text, @"(^|\s+){1}VIII($|\s+){1}", "8", RegexOptions.IgnoreCase);
             */
-
-            return Regex.Replace(text, @"(((^|\s+){1}|(,\s+){1})the($|\s+){1})|(((^|\s+){1}|(,\s+){1})an($|\s+){1})|(((^|\s+){1}|(,\s+){1})a($|\s+){1})|[^A-Za-z0-9]", "", RegexOptions.IgnoreCase).ToLower();
+            return SanitizeRegex.Replace(text, "").ToLower();
         }
 
         public static string ConvertRomans(this string text)

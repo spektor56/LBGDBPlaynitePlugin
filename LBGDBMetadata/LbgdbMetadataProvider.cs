@@ -2,11 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 using LBGDBMetadata.Extensions;
 using LBGDBMetadata.LaunchBox;
 using LBGDBMetadata.LaunchBox.Metadata;
-using Microsoft.EntityFrameworkCore;
 using Playnite.SDK.Metadata;
 using Playnite.SDK.Models;
 using Playnite.SDK.Plugins;
@@ -21,7 +19,7 @@ namespace LBGDBMetadata
     {
         private readonly MetadataRequestOptions _options;
         private readonly LbgdbMetadataPlugin _plugin;
-        private LaunchBox.Metadata.Game _game;
+        private Game _game;
         private Dictionary<string, int> _regionPriority = new Dictionary<string, int>();
 
         public LbgdbMetadataProvider(MetadataRequestOptions options, LbgdbMetadataPlugin plugin)
@@ -345,6 +343,11 @@ namespace LBGDBMetadata
             }
 
             return base.GetLinks();
+        }
+
+        public override List<string> GetFeatures()
+        {
+            return base.GetFeatures();
         }
 
         public override List<MetadataField> AvailableFields

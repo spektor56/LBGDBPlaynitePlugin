@@ -13,6 +13,7 @@ using Playnite.SDK.Plugins;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.Processing;
+using Game = LBGDBMetadata.LaunchBox.Metadata.Game;
 
 namespace LBGDBMetadata
 {
@@ -70,7 +71,7 @@ namespace LBGDBMetadata
             return images.FirstOrDefault();
         }
 
-        private LaunchBox.Metadata.Game GetGame()
+        private Game GetGame()
         {
             if (_game is null)
             {
@@ -82,11 +83,11 @@ namespace LBGDBMetadata
 
                 if (!string.IsNullOrWhiteSpace(gameSearchName))
                 {
-                    if (_options?.GameData?.Region != null)
+                    if (_options?.GameData?.Region != null && _regionPriority.Count < 1)
                     {
                         if (!string.IsNullOrWhiteSpace(_options.GameData.Region.Name))
                         {
-                            _regionPriority = _options.GameData.Region.Name.GetRegionPriority();
+                            _regionPriority = _options.GameData.Region.Name.GetRegionPriorityList();
                         }
                     }
 
@@ -101,39 +102,75 @@ namespace LBGDBMetadata
                     
                     using (var context = new MetaDataContext(_plugin.GetPluginUserDataPath()))
                     {
-                        _game = context.Games.FirstOrDefault(game =>
-                            game.PlatformSearch == platformSearchName && (game.NameSearch == gameSearchName ||
-                                                                          game.AlternateNames.Any(alternateName =>
-                                                                              alternateName.NameSearch ==
-                                                                              gameSearchName)));
-
-                        if (_game?.NameSearch != null && _game?.NameSearch != gameSearchName)
+                        if (_regionPriority.Count > 0)
                         {
-                            var gameName = context.GameAlternateName.FirstOrDefault(alternateName =>
-                                alternateName.DatabaseID == _game.DatabaseID && alternateName.NameSearch ==
-                                gameSearchName);
-                             
-                            if (gameName != null)
+                            var alternateNames = context.GameAlternateName.Where(game =>
+                                game.Game.PlatformSearch == platformSearchName && (game.NameSearch == gameSearchName || game.Game.NameSearch == gameSearchName)).ToList();
+
+                            var regionGameName = alternateNames.Where(game => _regionPriority.ContainsKey(game.Region ?? "")).OrderBy((n) =>
                             {
-                                if (!string.IsNullOrWhiteSpace(gameName.AlternateName))
+                                if (_regionPriority.ContainsKey(n.Region ?? ""))
                                 {
-                                    _game.Name = gameName.AlternateName;
+                                    return _regionPriority[n.Region ?? ""];
                                 }
 
-                                if (!string.IsNullOrWhiteSpace(gameName.Region))
+                                return int.MaxValue;
+                            }).FirstOrDefault();
+
+                            if (regionGameName != null)
+                            {
+                                _game = context.Games.FirstOrDefault(
+                                    game => game.DatabaseID == regionGameName.DatabaseID);
+
+                                if (_game != null)
                                 {
-                                    if (_regionPriority.Count < 1)
+                                    if (!string.IsNullOrWhiteSpace(regionGameName.AlternateName))
                                     {
-                                        _regionPriority = gameName.Region.GetRegionPriority();
+                                        _game.Name = regionGameName.AlternateName;
+                                    }
+                                }
+                            }
+                        }
+
+                        if (_game is null)
+                        {
+                            _game = context.Games.FirstOrDefault(game =>
+                                game.PlatformSearch == platformSearchName && (game.NameSearch == gameSearchName ||
+                                                                              game.AlternateNames.Any(alternateName =>
+                                                                                  alternateName.NameSearch ==
+                                                                                  gameSearchName)));
+
+                            if (_game?.NameSearch != null && _game?.NameSearch != gameSearchName)
+                            {
+                                var alternateGameNames = context.GameAlternateName.Where(alternateName =>
+                                    alternateName.DatabaseID == _game.DatabaseID && alternateName.NameSearch ==
+                                    gameSearchName);
+
+                                var numberOfNames = alternateGameNames.Count();
+
+                                if (numberOfNames > 0)
+                                {
+                                    var gameName = alternateGameNames.First();
+                                    if (!string.IsNullOrWhiteSpace(gameName.AlternateName))
+                                    {
+                                        _game.Name = gameName.AlternateName;
+                                    }
+
+                                    if (numberOfNames < 2 && !string.IsNullOrWhiteSpace(gameName.Region))
+                                    {
+                                        if (_regionPriority.Count < 1)
+                                        {
+                                            _regionPriority = gameName.Region.GetRegionPriorityList();
+                                        }
                                     }
                                 }
                             }
                         }
                     }
 
-                    if (_regionPriority.Count < 1)
+                    if (_game != null && _regionPriority.Count < 1)
                     {
-                        _regionPriority = LaunchBox.Region.GetRegionPriority(null);
+                        _regionPriority = LaunchBox.Region.GetRegionPriorityList(null);
                     }
                 }
             }

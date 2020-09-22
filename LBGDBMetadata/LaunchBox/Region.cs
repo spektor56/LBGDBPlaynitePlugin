@@ -35,27 +35,38 @@ namespace LBGDBMetadata.LaunchBox
         public const string UnitedStates = "United States";
         public const string World = "World";
 
-        public static Dictionary<string, int> GetRegionPriority(this string region)
+        public static List<string> GetRegions(this string region)
+        {
+            List<string> regionList = new List<string>();
+            if (!string.IsNullOrWhiteSpace(region))
+            {
+                regionList = region.Split(',').Select(item => item.Sanitize()).Where(item => !string.IsNullOrWhiteSpace(item)).Distinct().ToList();
+            }
+
+            return regionList;
+        }
+
+        public static Dictionary<string, int> GetRegionPriorityList(this string region)
         {
             Dictionary<string, int> regionPriorityList = new Dictionary<string, int>();
             if (string.IsNullOrWhiteSpace(region))
             {
-                GetRegions("canada", regionPriorityList);
-                GetRegions("usa", regionPriorityList);
+                GetRegionPriority("canada", regionPriorityList);
+                GetRegionPriority("usa", regionPriorityList);
             }
             else
             {
-                var splitRegions = region.Split(',').Select(item => item.Sanitize());
+                var splitRegions = region.Split(',').Select(item => item.Sanitize()).Where(item => !string.IsNullOrWhiteSpace(item)).Distinct();
                 foreach (var splitRegion in splitRegions)
                 {
-                    GetRegions(splitRegion, regionPriorityList);
+                    GetRegionPriority(splitRegion, regionPriorityList);
                 }
             }
             
             return regionPriorityList;
         }
         
-        private static void GetRegions(string region, Dictionary<string, int> regionPriorityList)
+        private static void GetRegionPriority(string region, Dictionary<string, int> regionPriorityList)
         {
             if (RegionList.TryGetValue(region, out var regionInfo))
             {
@@ -67,7 +78,7 @@ namespace LBGDBMetadata.LaunchBox
                 regionPriorityList.Add(regionInfo.RegionName, regionPriorityList.Count);
                 if (regionInfo.ParentRegion != null)
                 {
-                    GetRegions(regionInfo.ParentRegion, regionPriorityList);
+                    GetRegionPriority(regionInfo.ParentRegion, regionPriorityList);
                 }
             }
             else

@@ -102,6 +102,7 @@ namespace LBGDBMetadata
                     
                     using (var context = new MetaDataContext(_plugin.GetPluginUserDataPath()))
                     {
+                        /* Can't tell which region the actual game name is from in the game object...
                         if (_regionPriority.Count > 0)
                         {
                             var alternateNames = context.GameAlternateName.Where(game =>
@@ -131,7 +132,7 @@ namespace LBGDBMetadata
                                 }
                             }
                         }
-
+                        */
                         if (_game is null)
                         {
                             _game = context.Games.FirstOrDefault(game =>

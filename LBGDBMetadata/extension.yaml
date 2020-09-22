@@ -1,6 +1,6 @@
 ﻿Name: LBGDB metadata provider
 Author: Spektor
-Version: 1.6
+Version: 1.7
 Module: LBGDBMetadata.dll
 Type: MetadataProvider
 Icon: Resources\launchbox.ico

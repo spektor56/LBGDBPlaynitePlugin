@@ -75,6 +75,7 @@ namespace LBGDBMetadata
             {"nintendo64","nintendo64"},
             {"nintendo64dd","nintendo64dd"},
             {"nintendods","nintendods"},
+            {"nes","nintendoentertainmentsystem"},
             {"nintendoentertainmentsystem","nintendoentertainmentsystem"},
             {"nintendofamilycomputerdisksystem","nintendofamicomdisksystem"},
             {"nintendogameboy","nintendogameboy"},
@@ -117,7 +118,8 @@ namespace LBGDBMetadata
             {"sonyplaystation3","sonyplaystation3"},
             {"sonyplaystationvita","sonyplaystationvita"},
             {"sonypsp","sonypsp"},
-            {"supernintendoentertainmentsystem","supernintendoentertainmentsystem"}
+            {"supernintendoentertainmentsystem","supernintendoentertainmentsystem"},
+            {"snes","supernintendoentertainmentsystem"}
         };
 
         public LbgdbMetadataPlugin(IPlayniteAPI playniteAPI) : base(playniteAPI)

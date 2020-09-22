@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using LBGDBMetadata.Extensions;
 using LBGDBMetadata.LaunchBox;
 using LBGDBMetadata.LaunchBox.Metadata;
+using Microsoft.EntityFrameworkCore;
 using Playnite.SDK.Metadata;
 using Playnite.SDK.Models;
 using Playnite.SDK.Plugins;
@@ -20,21 +21,12 @@ namespace LBGDBMetadata
         private readonly MetadataRequestOptions _options;
         private readonly LbgdbMetadataPlugin _plugin;
         private LaunchBox.Metadata.Game _game;
-        private readonly Dictionary<string, int> _regionPriority;
+        private Dictionary<string, int> _regionPriority = new Dictionary<string, int>();
 
         public LbgdbMetadataProvider(MetadataRequestOptions options, LbgdbMetadataPlugin plugin)
         {
             _options = options;
             _plugin = plugin;
-
-            if (_options?.GameData?.Region != null)
-            {
-                _regionPriority = _options.GameData.Region.Name.GetRegionPriority();
-            }
-            else
-            {
-                _regionPriority = LaunchBox.Region.GetRegionPriority(null);
-            }
         }
 
         private int GetWeightedRating(double communityRatingCount, double communityRating )
@@ -90,6 +82,14 @@ namespace LBGDBMetadata
 
                 if (!string.IsNullOrWhiteSpace(gameSearchName))
                 {
+                    if (_options?.GameData?.Region != null)
+                    {
+                        if (!string.IsNullOrWhiteSpace(_options.GameData.Region.Name))
+                        {
+                            _regionPriority = _options.GameData.Region.Name.GetRegionPriority();
+                        }
+                    }
+
                     var platformSearchName = "";
                     if (!string.IsNullOrWhiteSpace(_options?.GameData?.Platform?.Name))
                     {
@@ -98,7 +98,7 @@ namespace LBGDBMetadata
                             ? _plugin.PlatformTranslationTable[sanitizedPlatform]
                             : sanitizedPlatform;
                     }
-
+                    
                     using (var context = new MetaDataContext(_plugin.GetPluginUserDataPath()))
                     {
                         _game = context.Games.FirstOrDefault(game =>
@@ -106,7 +106,34 @@ namespace LBGDBMetadata
                                                                           game.AlternateNames.Any(alternateName =>
                                                                               alternateName.NameSearch ==
                                                                               gameSearchName)));
-                        return _game;
+
+                        if (_game?.NameSearch != null && _game?.NameSearch != gameSearchName)
+                        {
+                            var gameName = context.GameAlternateName.FirstOrDefault(alternateName =>
+                                alternateName.DatabaseID == _game.DatabaseID && alternateName.NameSearch ==
+                                gameSearchName);
+                             
+                            if (gameName != null)
+                            {
+                                if (!string.IsNullOrWhiteSpace(gameName.AlternateName))
+                                {
+                                    _game.Name = gameName.AlternateName;
+                                }
+
+                                if (!string.IsNullOrWhiteSpace(gameName.Region))
+                                {
+                                    if (_regionPriority.Count < 1)
+                                    {
+                                        _regionPriority = gameName.Region.GetRegionPriority();
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    if (_regionPriority.Count < 1)
+                    {
+                        _regionPriority = LaunchBox.Region.GetRegionPriority(null);
                     }
                 }
             }

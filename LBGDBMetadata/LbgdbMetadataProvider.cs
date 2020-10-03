@@ -21,7 +21,7 @@ namespace LBGDBMetadata
         private readonly LbgdbMetadataPlugin _plugin;
         private Game _game;
         private Dictionary<string, int> _regionPriority = new Dictionary<string, int>();
-
+        
         public LbgdbMetadataProvider(MetadataRequestOptions options, LbgdbMetadataPlugin plugin)
         {
             _options = options;
@@ -81,11 +81,22 @@ namespace LBGDBMetadata
 
                 if (!string.IsNullOrWhiteSpace(gameSearchName))
                 {
-                    if (_options?.GameData?.Region != null && _regionPriority.Count < 1)
+                    if (_options?.GameData != null && _regionPriority.Count < 1)
                     {
-                        if (!string.IsNullOrWhiteSpace(_options.GameData.Region.Name))
+                        if (_options.GameData.Region != null && !string.IsNullOrWhiteSpace(_options.GameData.Region.Name))
                         {
                             _regionPriority = _options.GameData.Region.Name.GetRegionPriorityList();
+                        }
+                        else
+                        {
+                            if (!string.IsNullOrWhiteSpace(_options.GameData.GameImagePath))
+                            {
+                                var noIntoRegion = _options.GameData.GameImagePath.GetRegionNoIntro();
+                                if (!string.IsNullOrWhiteSpace(noIntoRegion))
+                                {
+                                    _regionPriority = noIntoRegion.GetRegionPriorityList();
+                                }
+                            }
                         }
                     }
 

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using LBGDBMetadata.Extensions;
 
 namespace LBGDBMetadata.LaunchBox
@@ -34,6 +35,25 @@ namespace LBGDBMetadata.LaunchBox
         public const string UnitedKingdom = "United Kingdom";
         public const string UnitedStates = "United States";
         public const string World = "World";
+
+        private static readonly Regex NoIntroTags = new Regex(@"(?<=\()([\w\s]+,?)+(?=\))", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+
+        public static string GetRegionNoIntro(this string text)
+        {
+            var tagGroups = NoIntroTags.Matches(text);
+            foreach (Match tagGroup in tagGroups)
+            {
+                var regionList = tagGroup.Value.Split(',').Select(region => region.Sanitize())
+                    .Where(region => !string.IsNullOrWhiteSpace(region)).Distinct().ToList();
+
+                if (regionList.All(region => RegionList.ContainsKey(region)))
+                {
+                    return string.Join(",",regionList);
+                }
+            }
+
+            return "";
+        }
 
         public static List<string> GetRegions(this string region)
         {
@@ -93,6 +113,8 @@ namespace LBGDBMetadata.LaunchBox
                 }
             }
         }
+
+
 
         private static readonly Dictionary<string, RegionInfo> RegionList = new Dictionary<string, RegionInfo>
         {

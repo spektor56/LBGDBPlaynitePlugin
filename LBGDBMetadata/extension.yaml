@@ -4,6 +4,9 @@ Version: 1.8
 Module: LBGDBMetadata.dll
 Type: MetadataProvider
 Icon: Resources\launchbox.ico
+Links:
+  - Name: Github
+    Url: https://github.com/spektor56/LBGDBPlaynitePlugin
 UpdaterConfig:
   GitHubUser: spektor56
   GitHubRepo: LBGDBPlaynitePlugin

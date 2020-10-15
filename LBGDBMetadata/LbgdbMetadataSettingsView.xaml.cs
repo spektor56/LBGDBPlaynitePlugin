@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
-using Playnite.ViewModels;
-using Playnite.Windows;
-
+using Playnite.SDK;
 
 namespace LBGDBMetadata
 {
@@ -13,7 +11,6 @@ namespace LBGDBMetadata
     public partial class LbgdbMetadataSettingsView : UserControl
     {
         private readonly LbgdbMetadataPlugin _plugin;
-        private ProgressViewViewModel _downloadProgress;
 
         public LbgdbMetadataSettingsView()
         {
@@ -29,22 +26,20 @@ namespace LBGDBMetadata
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             btnRefresh.IsEnabled = false;
-            
-
-            _downloadProgress = new ProgressViewViewModel(new ProgressWindowFactory(),
-                () =>
+            var progressOptions =
+                new GlobalProgressOptions("Downloading LaunchBox Metadata...", false) {IsIndeterminate = false};
+            _plugin.PlayniteApi.Dialogs.ActivateGlobalProgress((progressAction) =>
+            {
+                try
                 {
-                    try
-                    {
-                        var result = _plugin.UpdateMetadata(_downloadProgress).Result;
-                    }
-                    catch (Exception)
-                    {
-                        btnRefresh.IsEnabled = true;
-                    }
-                },"Downloading LaunchBox Metadata..." );
-            _downloadProgress.ActivateProgress();
-
+                    progressAction.ProgressMaxValue = 4;
+                    var result = _plugin.UpdateMetadata(progressAction).Result;
+                }
+                catch (Exception)
+                {
+                    btnRefresh.IsEnabled = true;
+                }
+            }, progressOptions);
         }
 
         private async void UserControl_Loaded(object sender, RoutedEventArgs e)

@@ -6,38 +6,38 @@ namespace LBGDBMetadata
 {
     public class LbgdbMetadataSettings : ObservableObject, ISettings
     {
-        private LbgdbMetadataSettings editingClone;
-        private readonly LbgdbMetadataPlugin plugin;
+        private LbgdbMetadataSettings _editingClone;
+        private readonly LbgdbMetadataPlugin _plugin;
 
-        private string oldMetadataHash = "";
+        private string _oldMetadataHash = "";
         public string OldMetadataHash
         {
-            get => oldMetadataHash;
+            get => _oldMetadataHash;
             set
             {
-                oldMetadataHash = value;
+                _oldMetadataHash = value;
                 OnPropertyChanged();
             }
         }
         
-        private string metaDataURL = @"https://gamesdb.launchbox-app.com/Metadata.zip";
+        private string _metaDataUrl = @"https://gamesdb.launchbox-app.com/Metadata.zip";
         public string MetaDataURL
         {
-            get => metaDataURL;
+            get => _metaDataUrl;
             set
             {
-                metaDataURL = value;
+                _metaDataUrl = value;
                 OnPropertyChanged();
             }
         }
 
-        private string metaDataFileName = @"Metadata.xml";
+        private string _metaDataFileName = @"Metadata.xml";
         public string MetaDataFileName
         {
-            get => metaDataFileName;
+            get => _metaDataFileName;
             set
             {
-                metaDataFileName = value;
+                _metaDataFileName = value;
                 OnPropertyChanged();
             }
         }
@@ -48,29 +48,29 @@ namespace LBGDBMetadata
 
         public LbgdbMetadataSettings(LbgdbMetadataPlugin plugin)
         {
-            this.plugin = plugin;
-            
-            var settings = plugin.LoadPluginSettings<LbgdbMetadataSettings>();
-            if (settings != null)
+            this._plugin = plugin;
+            var savedSettings = plugin.LoadPluginSettings<LbgdbMetadataSettings>();
+            if (savedSettings != null)
             {
-                LoadValues(settings);
+                RestoreSettings(savedSettings);
             }
-            
         }
 
         public void BeginEdit()
         {
-            editingClone = this.GetClone();
+            _editingClone = new LbgdbMetadataSettings(_plugin);
         }
 
-        public void EndEdit()
-        {
-            plugin.SavePluginSettings(this);
-        }
 
         public void CancelEdit()
         {
-            LoadValues(editingClone);
+            RestoreSettings(_editingClone);
+        }
+
+
+        public void EndEdit()
+        {
+            _plugin.SavePluginSettings(this);
         }
 
         public bool VerifySettings(out List<string> errors)
@@ -79,9 +79,11 @@ namespace LBGDBMetadata
             return true;
         }
 
-        private void LoadValues(LbgdbMetadataSettings source)
+        private void RestoreSettings(LbgdbMetadataSettings source)
         {
-            source.CopyProperties(this, false, null, true);
+            MetaDataFileName = source.MetaDataFileName;
+            MetaDataURL = source.MetaDataURL;
+            OldMetadataHash = source.OldMetadataHash;
         }
     }
 }

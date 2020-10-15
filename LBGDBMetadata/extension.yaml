@@ -1,6 +1,7 @@
-﻿Name: LBGDB metadata provider
-Author: Spektor
-Version: 1.8
+﻿Id: Spektor56_Playnite_Metadata_LBGDB
+Name: LBGDB metadata provider
+Author: Spektor56
+Version: 2.0.0
 Module: LBGDBMetadata.dll
 Type: MetadataProvider
 Icon: Resources\launchbox.ico
